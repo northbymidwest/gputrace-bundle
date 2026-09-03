@@ -10,6 +10,12 @@ updates:
     commit-message:
       prefix: ci
     labels: []
+    # One PR for all action bumps, so multi-`uses:` actions (e.g. codeql-action
+    # init + analyze) move together rather than in separate, version-mismatched PRs.
+    groups:
+      actions:
+        patterns:
+          - "*"
 
   # Version updates OFF: Cargo.toml versions are minimum floors, not targets.
   # Left enabled so a security advisory against a floor still opens a PR.
