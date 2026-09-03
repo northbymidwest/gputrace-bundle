@@ -54,7 +54,7 @@ jobs:
         with:
           tool: cargo-machete@0.9.2
       - run: cargo machete
-      - uses: crate-ci/typos@8a48f81b6c64dcfea44b3633223084c4be58ac5f # v1.49.0
+      - uses: crate-ci/typos@a8168dc2984a9e2352f183ffe788f0f23a300389 # v1.49.1
 
   deny:
     runs-on: macos-latest
