@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   mutants:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       # No surviving mutants: every mutation the tests do not catch has a test

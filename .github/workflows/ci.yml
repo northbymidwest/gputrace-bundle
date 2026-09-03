@@ -1,8 +1,8 @@
 name: CI
 
-# gputrace-bundle is pure, framework-free Rust, so it builds and tests fully on
-# hosted runners. macOS only: a .gputrace is only produced by Apple's tooling,
-# so that is the platform its users are on.
+# gputrace-bundle is pure, framework-free Rust with no OS-specific code, so all
+# of CI runs on Ubuntu (cheaper and faster than macOS runners). A .gputrace is
+# only produced by Apple's tooling, but parsing it is platform-independent.
 on:
   push:
   pull_request:
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -32,7 +32,7 @@ jobs:
       - run: cargo test
 
   lint:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -57,24 +57,18 @@ jobs:
       - uses: crate-ci/typos@a8168dc2984a9e2352f183ffe788f0f23a300389 # v1.49.1
 
   deny:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # v1
+      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
         with:
-          toolchain: stable
-      - uses: taiki-e/install-action@37f7c5781271959fb65b6b35224e28652ff2b63d # v2.87.0
-        with:
-          tool: cargo-deny@0.20.2
-      # The cargo-deny-action is a Linux-only container action; run the CLI so
-      # this works on the macOS runner.
-      - run: cargo deny check licenses bans sources
+          command: check licenses bans sources
 
   msrv:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -94,7 +88,7 @@ jobs:
   semver:
     # Meaningful only once a baseline version is on crates.io; until the first
     # release it has nothing to compare against, so it is non-blocking.
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     continue-on-error: true
     steps:
@@ -104,7 +98,7 @@ jobs:
       - uses: obi1kenobi/cargo-semver-checks-action@6b69fcf40e9b5fb17adeb57e4b6ecd020649a239 # v2.9
 
   workflows:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
@@ -115,11 +109,11 @@ jobs:
           persist-credentials: false
       - name: actionlint
         env:
+          # go is preinstalled on the Ubuntu runner; pin actionlint by tag.
           SHELLCHECK_OPTS: -e SC2016
-        # go is not on the macOS runner; install actionlint via Homebrew.
         run: |
-          brew install actionlint
-          actionlint
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+          "$(go env GOPATH)/bin/actionlint"
       - uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
         with:
           inputs: .github

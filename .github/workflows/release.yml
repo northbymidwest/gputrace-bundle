@@ -2,7 +2,7 @@ name: release
 run-name: release ${{ inputs.version }}${{ inputs.dry_run && ' (dry run)' || '' }}
 
 # Publishes the crate, THEN tags. The tag is an output of a succeeded release,
-# never a trigger. Pure Rust, so the whole flow runs on hosted runners.
+# never a trigger. Pure Rust, so the whole flow runs on Ubuntu.
 on:
   workflow_dispatch:
     inputs:
@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   preflight:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
@@ -72,7 +72,7 @@ jobs:
   publish:
     needs: preflight
     environment: release
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: write
