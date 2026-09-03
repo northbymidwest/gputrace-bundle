@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ delete ! in Bundle::open
+@@ -40,17 +40,17 @@
+ #[derive(Debug)]
+ pub struct Bundle {
+     name: String,
+     textures: Vec<TextureDescriptor>,
+ }
+ 
+ impl Bundle {
+     pub fn open(path: &Path) -> Result<Bundle, Error> {
+-        if !path.is_dir() {
++        if  /* ~ changed by cargo-mutants ~ */path.is_dir() {
+             return Err(Error::NotABundle(path.to_path_buf()));
+         }
+         let index = read_member(path, "index")?;
+         let store0 = read_member(path, "store0")?;
+ 
+         let header = Header::parse(&index)?;
+         let rec_off = header.record_array_offset()?;
+         // `record_count` is untrusted (a u32 straight from the header); bound

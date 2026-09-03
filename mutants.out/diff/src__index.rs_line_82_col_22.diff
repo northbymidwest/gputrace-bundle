@@ -1,0 +1,21 @@
+--- src/index.rs
++++ replace == with != in Buckets::build
+@@ -74,17 +74,17 @@
+         let mut canonical: Vec<u32> = (0..header.record_count).collect();
+         let mut seen = vec![false; n];
+         for k in 0..header.bucket_count as usize {
+             let at = HEADER_LEN + k * BUCKET_SIZE;
+             let b = index.get(at..at + BUCKET_SIZE)?;
+             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());
+             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());
+             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());
+-            if canon == EMPTY && this == EMPTY && third == EMPTY {
++            if canon != /* ~ changed by cargo-mutants ~ */ EMPTY && this == EMPTY && third == EMPTY {
+                 continue;
+             }
+             if third != EMPTY {
+                 return None; // occupied buckets always carry the 0xFFFFFFFF marker
+             }
+             let (ti, ci) = (this as usize, canon as usize);
+             if ti >= n || ci >= n || seen[ti] {
+                 return None; // out of range, or two buckets claim one record

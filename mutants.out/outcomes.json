@@ -1,0 +1,5427 @@
+{
+  "outcomes": [
+    {
+      "scenario": "Baseline",
+      "summary": "Success",
+      "log_path": "log/baseline.log",
+      "diff_path": null,
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 3.142859167,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.602337542,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:48:9: replace Bundle::open -> Result<Bundle, Error> with Ok(Default::default())",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 48,
+              "column": 9
+            },
+            "end": {
+              "line": 117,
+              "column": 38
+            }
+          },
+          "replacement": "Ok(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__lib.rs_line_48_col_9.log",
+      "diff_path": "diff/src__lib.rs_line_48_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.159267792,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:48:12: delete ! in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 48,
+              "column": 12
+            },
+            "end": {
+              "line": 48,
+              "column": 13
+            }
+          },
+          "replacement": "",
+          "genre": "UnaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_48_col_12.log",
+      "diff_path": "diff/src__lib.rs_line_48_col_12.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.591672459,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.481093833,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:64:29: replace > with == in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 64,
+              "column": 29
+            },
+            "end": {
+              "line": 64,
+              "column": 30
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_64_col_29.log",
+      "diff_path": "diff/src__lib.rs_line_64_col_29.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.644271416,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.541272917,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:64:29: replace > with < in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 64,
+              "column": 29
+            },
+            "end": {
+              "line": 64,
+              "column": 30
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_64_col_29_001.log",
+      "diff_path": "diff/src__lib.rs_line_64_col_29_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.595139625,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.531346833,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:64:29: replace > with >= in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 64,
+              "column": 29
+            },
+            "end": {
+              "line": 64,
+              "column": 30
+            }
+          },
+          "replacement": ">=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_64_col_29_002.log",
+      "diff_path": "diff/src__lib.rs_line_64_col_29_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.6461135,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.542606041,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:69:54: replace + with - in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 69,
+              "column": 54
+            },
+            "end": {
+              "line": 69,
+              "column": 55
+            }
+          },
+          "replacement": "-",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_69_col_54.log",
+      "diff_path": "diff/src__lib.rs_line_69_col_54.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.643870459,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.322955834,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:69:54: replace + with * in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 69,
+              "column": 54
+            },
+            "end": {
+              "line": 69,
+              "column": 55
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_69_col_54_001.log",
+      "diff_path": "diff/src__lib.rs_line_69_col_54_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.603824083,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.5368175,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:69:58: replace * with + in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 69,
+              "column": 58
+            },
+            "end": {
+              "line": 69,
+              "column": 59
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_69_col_58.log",
+      "diff_path": "diff/src__lib.rs_line_69_col_58.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.647168959,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.542717416,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:69:58: replace * with / in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 69,
+              "column": 58
+            },
+            "end": {
+              "line": 69,
+              "column": 59
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_69_col_58_001.log",
+      "diff_path": "diff/src__lib.rs_line_69_col_58_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.648219625,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.599913167,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:80:37: replace != with == in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 80,
+              "column": 37
+            },
+            "end": {
+              "line": 80,
+              "column": 39
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_80_col_37.log",
+      "diff_path": "diff/src__lib.rs_line_80_col_37.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.640723833,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.543633042,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:89:29: replace match guard !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE with true in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 29
+            },
+            "end": {
+              "line": 89,
+              "column": 84
+            }
+          },
+          "replacement": "true",
+          "genre": "MatchArmGuard"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_89_col_29.log",
+      "diff_path": "diff/src__lib.rs_line_89_col_29.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.643872667,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.53559325,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:89:29: replace match guard !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE with false in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 29
+            },
+            "end": {
+              "line": 89,
+              "column": 84
+            }
+          },
+          "replacement": "false",
+          "genre": "MatchArmGuard"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_89_col_29_001.log",
+      "diff_path": "diff/src__lib.rs_line_89_col_29_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.692079625,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.530540125,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:89:47: replace && with || in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 47
+            },
+            "end": {
+              "line": 89,
+              "column": 49
+            }
+          },
+          "replacement": "||",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_89_col_47.log",
+      "diff_path": "diff/src__lib.rs_line_89_col_47.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.642898417,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.601404083,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:89:29: delete ! in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 29
+            },
+            "end": {
+              "line": 89,
+              "column": 30
+            }
+          },
+          "replacement": "",
+          "genre": "UnaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_89_col_29_002.log",
+      "diff_path": "diff/src__lib.rs_line_89_col_29_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.641313625,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.546541542,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:89:72: replace == with != in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 72
+            },
+            "end": {
+              "line": 89,
+              "column": 74
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_89_col_72.log",
+      "diff_path": "diff/src__lib.rs_line_89_col_72.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.657336583,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.590810167,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:93:17: replace && with || in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 93,
+              "column": 17
+            },
+            "end": {
+              "line": 93,
+              "column": 19
+            }
+          },
+          "replacement": "||",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__lib.rs_line_93_col_17.log",
+      "diff_path": "diff/src__lib.rs_line_93_col_17.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.213466541,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:93:28: replace == with != in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 93,
+              "column": 28
+            },
+            "end": {
+              "line": 93,
+              "column": 30
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_93_col_28.log",
+      "diff_path": "diff/src__lib.rs_line_93_col_28.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.648925708,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.539136583,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:107:54: replace == with != in Bundle::open",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::open",
+            "return_type": "-> Result<Bundle, Error>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 118,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 107,
+              "column": 54
+            },
+            "end": {
+              "line": 107,
+              "column": 56
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_107_col_54.log",
+      "diff_path": "diff/src__lib.rs_line_107_col_54.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.648257833,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.649163916,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:123:9: replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(Vec::new())",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::textures",
+            "return_type": "-> &[TextureDescriptor]",
+            "span": {
+              "start": {
+                "line": 120,
+                "column": 5
+              },
+              "end": {
+                "line": 124,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 123,
+              "column": 9
+            },
+            "end": {
+              "line": 123,
+              "column": 23
+            }
+          },
+          "replacement": "Vec::leak(Vec::new())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_123_col_9.log",
+      "diff_path": "diff/src__lib.rs_line_123_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.640272375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.595785708,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:123:9: replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(vec![Default::default()])",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::textures",
+            "return_type": "-> &[TextureDescriptor]",
+            "span": {
+              "start": {
+                "line": 120,
+                "column": 5
+              },
+              "end": {
+                "line": 124,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 123,
+              "column": 9
+            },
+            "end": {
+              "line": 123,
+              "column": 23
+            }
+          },
+          "replacement": "Vec::leak(vec![Default::default()])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__lib.rs_line_123_col_9_001.log",
+      "diff_path": "diff/src__lib.rs_line_123_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.222217625,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:127:9: replace Bundle::texture_count -> usize with 0",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::texture_count",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 126,
+                "column": 5
+              },
+              "end": {
+                "line": 128,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 127,
+              "column": 9
+            },
+            "end": {
+              "line": 127,
+              "column": 28
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_127_col_9.log",
+      "diff_path": "diff/src__lib.rs_line_127_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.648947916,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.596075167,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:127:9: replace Bundle::texture_count -> usize with 1",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::texture_count",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 126,
+                "column": 5
+              },
+              "end": {
+                "line": 128,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 127,
+              "column": 9
+            },
+            "end": {
+              "line": 127,
+              "column": 28
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_127_col_9_001.log",
+      "diff_path": "diff/src__lib.rs_line_127_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.646755709,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.600882458,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:131:9: replace Bundle::name -> &str with \"\"",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::name",
+            "return_type": "-> &str",
+            "span": {
+              "start": {
+                "line": 130,
+                "column": 5
+              },
+              "end": {
+                "line": 132,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 131,
+              "column": 9
+            },
+            "end": {
+              "line": 131,
+              "column": 19
+            }
+          },
+          "replacement": "\"\"",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_131_col_9.log",
+      "diff_path": "diff/src__lib.rs_line_131_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.654773084,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.594810042,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:131:9: replace Bundle::name -> &str with \"xyzzy\"",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "Bundle::name",
+            "return_type": "-> &str",
+            "span": {
+              "start": {
+                "line": 130,
+                "column": 5
+              },
+              "end": {
+                "line": 132,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 131,
+              "column": 9
+            },
+            "end": {
+              "line": 131,
+              "column": 19
+            }
+          },
+          "replacement": "\"xyzzy\"",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_131_col_9_001.log",
+      "diff_path": "diff/src__lib.rs_line_131_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.647185833,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.583668,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:136:5: replace read_member -> Result<Vec<u8>, Error> with Ok(vec![])",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "read_member",
+            "return_type": "-> Result<Vec<u8>, Error>",
+            "span": {
+              "start": {
+                "line": 135,
+                "column": 1
+              },
+              "end": {
+                "line": 141,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 136,
+              "column": 5
+            },
+            "end": {
+              "line": 140,
+              "column": 70
+            }
+          },
+          "replacement": "Ok(vec![])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_136_col_5.log",
+      "diff_path": "diff/src__lib.rs_line_136_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.644808792,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.588120542,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:136:5: replace read_member -> Result<Vec<u8>, Error> with Ok(vec![0])",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "read_member",
+            "return_type": "-> Result<Vec<u8>, Error>",
+            "span": {
+              "start": {
+                "line": 135,
+                "column": 1
+              },
+              "end": {
+                "line": 141,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 136,
+              "column": 5
+            },
+            "end": {
+              "line": 140,
+              "column": 70
+            }
+          },
+          "replacement": "Ok(vec![0])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_136_col_5_001.log",
+      "diff_path": "diff/src__lib.rs_line_136_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.641271208,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.596187166,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:136:5: replace read_member -> Result<Vec<u8>, Error> with Ok(vec![1])",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "read_member",
+            "return_type": "-> Result<Vec<u8>, Error>",
+            "span": {
+              "start": {
+                "line": 135,
+                "column": 1
+              },
+              "end": {
+                "line": 141,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 136,
+              "column": 5
+            },
+            "end": {
+              "line": 140,
+              "column": 70
+            }
+          },
+          "replacement": "Ok(vec![1])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_136_col_5_002.log",
+      "diff_path": "diff/src__lib.rs_line_136_col_5_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.642654375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.597320041,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/lib.rs:137:8: delete ! in read_member",
+          "package": "gputrace-bundle",
+          "file": "src/lib.rs",
+          "function": {
+            "function_name": "read_member",
+            "return_type": "-> Result<Vec<u8>, Error>",
+            "span": {
+              "start": {
+                "line": 135,
+                "column": 1
+              },
+              "end": {
+                "line": 141,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 137,
+              "column": 8
+            },
+            "end": {
+              "line": 137,
+              "column": 9
+            }
+          },
+          "replacement": "",
+          "genre": "UnaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__lib.rs_line_137_col_8.log",
+      "diff_path": "diff/src__lib.rs_line_137_col_8.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.654037959,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.643135208,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:28:5: replace word -> u64 with 0",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "word",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "line": 33,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 5
+            },
+            "end": {
+              "line": 32,
+              "column": 22
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_28_col_5.log",
+      "diff_path": "diff/src__descriptor.rs_line_28_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.658320125,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.220202834,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:28:5: replace word -> u64 with 1",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "word",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "line": 33,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 5
+            },
+            "end": {
+              "line": 32,
+              "column": 22
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_28_col_5_001.log",
+      "diff_path": "diff/src__descriptor.rs_line_28_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.652260166,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.212664584,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:28:15: replace * with + in word",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "word",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "line": 33,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 15
+            },
+            "end": {
+              "line": 28,
+              "column": 16
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_28_col_15.log",
+      "diff_path": "diff/src__descriptor.rs_line_28_col_15.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.644481708,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.221673042,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:28:15: replace * with / in word",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "word",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "line": 33,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 28,
+              "column": 15
+            },
+            "end": {
+              "line": 28,
+              "column": 16
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_28_col_15_001.log",
+      "diff_path": "diff/src__descriptor.rs_line_28_col_15_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.700041958,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.216922625,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:30:19: replace + with - in word",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "word",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "line": 33,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 30,
+              "column": 19
+            },
+            "end": {
+              "line": 30,
+              "column": 20
+            }
+          },
+          "replacement": "-",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_30_col_19.log",
+      "diff_path": "diff/src__descriptor.rs_line_30_col_19.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.659807459,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.220284791,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:30:19: replace + with * in word",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "word",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 26,
+                "column": 1
+              },
+              "end": {
+                "line": 33,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 30,
+              "column": 19
+            },
+            "end": {
+              "line": 30,
+              "column": 20
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_30_col_19_001.log",
+      "diff_path": "diff/src__descriptor.rs_line_30_col_19_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.645313833,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.272875,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:37:5: replace descriptor_tag -> u64 with 0",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "descriptor_tag",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 35,
+                "column": 1
+              },
+              "end": {
+                "line": 38,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 37,
+              "column": 5
+            },
+            "end": {
+              "line": 37,
+              "column": 21
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_37_col_5.log",
+      "diff_path": "diff/src__descriptor.rs_line_37_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.653849667,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.212824708,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:37:5: replace descriptor_tag -> u64 with 1",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "descriptor_tag",
+            "return_type": "-> u64",
+            "span": {
+              "start": {
+                "line": 35,
+                "column": 1
+              },
+              "end": {
+                "line": 38,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 37,
+              "column": 5
+            },
+            "end": {
+              "line": 37,
+              "column": 21
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_37_col_5_001.log",
+      "diff_path": "diff/src__descriptor.rs_line_37_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.657471875,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.221789375,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:41:5: replace parse_descriptor -> TextureDescriptor with Default::default()",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "parse_descriptor",
+            "return_type": "-> TextureDescriptor",
+            "span": {
+              "start": {
+                "line": 40,
+                "column": 1
+              },
+              "end": {
+                "line": 54,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 41,
+              "column": 5
+            },
+            "end": {
+              "line": 53,
+              "column": 6
+            }
+          },
+          "replacement": "Default::default()",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__descriptor.rs_line_41_col_5.log",
+      "diff_path": "diff/src__descriptor.rs_line_41_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.214074834,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:59:5: replace derive_tag -> Option<u64> with None",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "derive_tag",
+            "return_type": "-> Option<u64>",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 1
+              },
+              "end": {
+                "line": 66,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 59,
+              "column": 5
+            },
+            "end": {
+              "line": 65,
+              "column": 67
+            }
+          },
+          "replacement": "None",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_59_col_5.log",
+      "diff_path": "diff/src__descriptor.rs_line_59_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.64812875,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.2169465,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:59:5: replace derive_tag -> Option<u64> with Some(0)",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "derive_tag",
+            "return_type": "-> Option<u64>",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 1
+              },
+              "end": {
+                "line": 66,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 59,
+              "column": 5
+            },
+            "end": {
+              "line": 65,
+              "column": 67
+            }
+          },
+          "replacement": "Some(0)",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_59_col_5_001.log",
+      "diff_path": "diff/src__descriptor.rs_line_59_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.59923,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.218648375,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:59:5: replace derive_tag -> Option<u64> with Some(1)",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "derive_tag",
+            "return_type": "-> Option<u64>",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 1
+              },
+              "end": {
+                "line": 66,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 59,
+              "column": 5
+            },
+            "end": {
+              "line": 65,
+              "column": 67
+            }
+          },
+          "replacement": "Some(1)",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_59_col_5_002.log",
+      "diff_path": "diff/src__descriptor.rs_line_59_col_5_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.590163541,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.214072583,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:61:38: replace += with -= in derive_tag",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "derive_tag",
+            "return_type": "-> Option<u64>",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 1
+              },
+              "end": {
+                "line": 66,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 61,
+              "column": 38
+            },
+            "end": {
+              "line": 61,
+              "column": 40
+            }
+          },
+          "replacement": "-=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_61_col_38.log",
+      "diff_path": "diff/src__descriptor.rs_line_61_col_38.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.700702458,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.221840459,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/descriptor.rs:61:38: replace += with *= in derive_tag",
+          "package": "gputrace-bundle",
+          "file": "src/descriptor.rs",
+          "function": {
+            "function_name": "derive_tag",
+            "return_type": "-> Option<u64>",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 1
+              },
+              "end": {
+                "line": 66,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 61,
+              "column": 38
+            },
+            "end": {
+              "line": 61,
+              "column": 40
+            }
+          },
+          "replacement": "*=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__descriptor.rs_line_61_col_38_001.log",
+      "diff_path": "diff/src__descriptor.rs_line_61_col_38_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.704315791,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.25719,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:18:9: replace Header::parse -> Result<Header, Error> with Ok(Default::default())",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 18,
+              "column": 9
+            },
+            "end": {
+              "line": 28,
+              "column": 11
+            }
+          },
+          "replacement": "Ok(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__index.rs_line_18_col_9.log",
+      "diff_path": "diff/src__index.rs_line_18_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.217775166,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:21:23: replace != with == in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 21,
+              "column": 23
+            },
+            "end": {
+              "line": 21,
+              "column": 25
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_21_col_23.log",
+      "diff_path": "diff/src__index.rs_line_21_col_23.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.643686,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.270293,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:24:57: replace * with + in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 24,
+              "column": 57
+            },
+            "end": {
+              "line": 24,
+              "column": 58
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_24_col_57.log",
+      "diff_path": "diff/src__index.rs_line_24_col_57.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.703350375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.273211833,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:24:57: replace * with / in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 24,
+              "column": 57
+            },
+            "end": {
+              "line": 24,
+              "column": 58
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_24_col_57_001.log",
+      "diff_path": "diff/src__index.rs_line_24_col_57_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.692108417,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.271180125,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:24:68: replace + with - in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 24,
+              "column": 68
+            },
+            "end": {
+              "line": 24,
+              "column": 69
+            }
+          },
+          "replacement": "-",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_24_col_68.log",
+      "diff_path": "diff/src__index.rs_line_24_col_68.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.65488675,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.221693417,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:24:68: replace + with * in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 24,
+              "column": 68
+            },
+            "end": {
+              "line": 24,
+              "column": 69
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_24_col_68_001.log",
+      "diff_path": "diff/src__index.rs_line_24_col_68_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.695816167,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.275590667,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:24:64: replace * with + in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 24,
+              "column": 64
+            },
+            "end": {
+              "line": 24,
+              "column": 65
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_24_col_64.log",
+      "diff_path": "diff/src__index.rs_line_24_col_64.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.700247583,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.269315791,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:24:64: replace * with / in Header::parse",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::parse",
+            "return_type": "-> Result<Header, Error>",
+            "span": {
+              "start": {
+                "line": 17,
+                "column": 5
+              },
+              "end": {
+                "line": 29,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 24,
+              "column": 64
+            },
+            "end": {
+              "line": 24,
+              "column": 65
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_24_col_64_001.log",
+      "diff_path": "diff/src__index.rs_line_24_col_64_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.704015375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.2718935,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:33:9: replace Header::record_array_offset -> Result<usize, Error> with Ok(0)",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::record_array_offset",
+            "return_type": "-> Result<usize, Error>",
+            "span": {
+              "start": {
+                "line": 31,
+                "column": 5
+              },
+              "end": {
+                "line": 37,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 33,
+              "column": 9
+            },
+            "end": {
+              "line": 36,
+              "column": 68
+            }
+          },
+          "replacement": "Ok(0)",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_33_col_9.log",
+      "diff_path": "diff/src__index.rs_line_33_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.65128225,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.269434125,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:33:9: replace Header::record_array_offset -> Result<usize, Error> with Ok(1)",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Header::record_array_offset",
+            "return_type": "-> Result<usize, Error>",
+            "span": {
+              "start": {
+                "line": 31,
+                "column": 5
+              },
+              "end": {
+                "line": 37,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 33,
+              "column": 9
+            },
+            "end": {
+              "line": 36,
+              "column": 68
+            }
+          },
+          "replacement": "Ok(1)",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_33_col_9_001.log",
+      "diff_path": "diff/src__index.rs_line_33_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.655679083,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.275492,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:48:9: replace Record::parse_at -> Option<Record> with None",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::parse_at",
+            "return_type": "-> Option<Record>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 54,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 48,
+              "column": 9
+            },
+            "end": {
+              "line": 53,
+              "column": 11
+            }
+          },
+          "replacement": "None",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_48_col_9.log",
+      "diff_path": "diff/src__index.rs_line_48_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.640730542,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.272112917,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:48:9: replace Record::parse_at -> Option<Record> with Some(Default::default())",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::parse_at",
+            "return_type": "-> Option<Record>",
+            "span": {
+              "start": {
+                "line": 47,
+                "column": 5
+              },
+              "end": {
+                "line": 54,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 48,
+              "column": 9
+            },
+            "end": {
+              "line": 53,
+              "column": 11
+            }
+          },
+          "replacement": "Some(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__index.rs_line_48_col_9_001.log",
+      "diff_path": "diff/src__index.rs_line_48_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.222104083,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:60:9: replace Record::is_alias -> bool with true",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::is_alias",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 5
+              },
+              "end": {
+                "line": 61,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 60,
+              "column": 9
+            },
+            "end": {
+              "line": 60,
+              "column": 61
+            }
+          },
+          "replacement": "true",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_60_col_9.log",
+      "diff_path": "diff/src__index.rs_line_60_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.653994875,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.270230541,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:60:9: replace Record::is_alias -> bool with false",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::is_alias",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 5
+              },
+              "end": {
+                "line": 61,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 60,
+              "column": 9
+            },
+            "end": {
+              "line": 60,
+              "column": 61
+            }
+          },
+          "replacement": "false",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_60_col_9_001.log",
+      "diff_path": "diff/src__index.rs_line_60_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.70614425,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.271107083,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:60:33: replace && with || in Record::is_alias",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::is_alias",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 5
+              },
+              "end": {
+                "line": 61,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 60,
+              "column": 33
+            },
+            "end": {
+              "line": 60,
+              "column": 35
+            }
+          },
+          "replacement": "||",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_60_col_33.log",
+      "diff_path": "diff/src__index.rs_line_60_col_33.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.702168458,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.756970334,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:60:28: replace == with != in Record::is_alias",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::is_alias",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 5
+              },
+              "end": {
+                "line": 61,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 60,
+              "column": 28
+            },
+            "end": {
+              "line": 60,
+              "column": 30
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_60_col_28.log",
+      "diff_path": "diff/src__index.rs_line_60_col_28.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.702026708,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.276932209,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:60:56: replace == with != in Record::is_alias",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Record::is_alias",
+            "return_type": "-> bool",
+            "span": {
+              "start": {
+                "line": 56,
+                "column": 5
+              },
+              "end": {
+                "line": 61,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 60,
+              "column": 56
+            },
+            "end": {
+              "line": 60,
+              "column": 58
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_60_col_56.log",
+      "diff_path": "diff/src__index.rs_line_60_col_56.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.7087845,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.267083916,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:73:9: replace Buckets::build -> Option<Buckets> with None",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 73,
+              "column": 9
+            },
+            "end": {
+              "line": 95,
+              "column": 36
+            }
+          },
+          "replacement": "None",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_73_col_9.log",
+      "diff_path": "diff/src__index.rs_line_73_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.704664375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.268679458,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:73:9: replace Buckets::build -> Option<Buckets> with Some(Default::default())",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 73,
+              "column": 9
+            },
+            "end": {
+              "line": 95,
+              "column": 36
+            }
+          },
+          "replacement": "Some(Default::default())",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "Unviable",
+      "log_path": "log/src__index.rs_line_73_col_9_001.log",
+      "diff_path": "diff/src__index.rs_line_73_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.22049775,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:77:33: replace + with - in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 33
+            },
+            "end": {
+              "line": 77,
+              "column": 34
+            }
+          },
+          "replacement": "-",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_77_col_33.log",
+      "diff_path": "diff/src__index.rs_line_77_col_33.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.648491667,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.26775725,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:77:33: replace + with * in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 33
+            },
+            "end": {
+              "line": 77,
+              "column": 34
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_77_col_33_001.log",
+      "diff_path": "diff/src__index.rs_line_77_col_33_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.703713875,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.27642225,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:77:37: replace * with + in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 37
+            },
+            "end": {
+              "line": 77,
+              "column": 38
+            }
+          },
+          "replacement": "+",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_77_col_37.log",
+      "diff_path": "diff/src__index.rs_line_77_col_37.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.699030542,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.275455917,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:77:37: replace * with / in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 77,
+              "column": 37
+            },
+            "end": {
+              "line": 77,
+              "column": 38
+            }
+          },
+          "replacement": "/",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_77_col_37_001.log",
+      "diff_path": "diff/src__index.rs_line_77_col_37_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.710257542,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.268273792,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:78:38: replace + with - in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 78,
+              "column": 38
+            },
+            "end": {
+              "line": 78,
+              "column": 39
+            }
+          },
+          "replacement": "-",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_78_col_38.log",
+      "diff_path": "diff/src__index.rs_line_78_col_38.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.7548415,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.271522916,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:78:38: replace + with * in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 78,
+              "column": 38
+            },
+            "end": {
+              "line": 78,
+              "column": 39
+            }
+          },
+          "replacement": "*",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_78_col_38_001.log",
+      "diff_path": "diff/src__index.rs_line_78_col_38_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.690587167,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.2743185,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:82:48: replace && with || in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 82,
+              "column": 48
+            },
+            "end": {
+              "line": 82,
+              "column": 50
+            }
+          },
+          "replacement": "||",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_82_col_48.log",
+      "diff_path": "diff/src__index.rs_line_82_col_48.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.749598042,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.267725833,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:82:31: replace && with || in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 82,
+              "column": 31
+            },
+            "end": {
+              "line": 82,
+              "column": 33
+            }
+          },
+          "replacement": "||",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_82_col_31.log",
+      "diff_path": "diff/src__index.rs_line_82_col_31.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.754010583,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.269255417,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:82:22: replace == with != in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 82,
+              "column": 22
+            },
+            "end": {
+              "line": 82,
+              "column": 24
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_82_col_22.log",
+      "diff_path": "diff/src__index.rs_line_82_col_22.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.75304525,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.264897208,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:82:39: replace == with != in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 82,
+              "column": 39
+            },
+            "end": {
+              "line": 82,
+              "column": 41
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_82_col_39.log",
+      "diff_path": "diff/src__index.rs_line_82_col_39.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.7004625,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.269554292,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:82:57: replace == with != in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 82,
+              "column": 57
+            },
+            "end": {
+              "line": 82,
+              "column": 59
+            }
+          },
+          "replacement": "!=",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_82_col_57.log",
+      "diff_path": "diff/src__index.rs_line_82_col_57.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.792651209,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.268582459,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:85:22: replace != with == in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 85,
+              "column": 22
+            },
+            "end": {
+              "line": 85,
+              "column": 24
+            }
+          },
+          "replacement": "==",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_85_col_22.log",
+      "diff_path": "diff/src__index.rs_line_85_col_22.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.705990458,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.267188084,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:89:35: replace || with && in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 35
+            },
+            "end": {
+              "line": 89,
+              "column": 37
+            }
+          },
+          "replacement": "&&",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_89_col_35.log",
+      "diff_path": "diff/src__index.rs_line_89_col_35.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.755519291,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.274382458,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:89:24: replace || with && in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 24
+            },
+            "end": {
+              "line": 89,
+              "column": 26
+            }
+          },
+          "replacement": "&&",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_89_col_24.log",
+      "diff_path": "diff/src__index.rs_line_89_col_24.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.750570542,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.270111917,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:89:19: replace >= with < in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 19
+            },
+            "end": {
+              "line": 89,
+              "column": 21
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_89_col_19.log",
+      "diff_path": "diff/src__index.rs_line_89_col_19.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.75063725,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.273854875,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:89:30: replace >= with < in Buckets::build",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::build",
+            "return_type": "-> Option<Buckets>",
+            "span": {
+              "start": {
+                "line": 72,
+                "column": 5
+              },
+              "end": {
+                "line": 96,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 89,
+              "column": 30
+            },
+            "end": {
+              "line": 89,
+              "column": 32
+            }
+          },
+          "replacement": "<",
+          "genre": "BinaryOperator"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_89_col_30.log",
+      "diff_path": "diff/src__index.rs_line_89_col_30.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.699997375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.263656042,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:100:9: replace Buckets::canonical -> usize with 0",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::canonical",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 98,
+                "column": 5
+              },
+              "end": {
+                "line": 101,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 100,
+              "column": 9
+            },
+            "end": {
+              "line": 100,
+              "column": 66
+            }
+          },
+          "replacement": "0",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_100_col_9.log",
+      "diff_path": "diff/src__index.rs_line_100_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.751781,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.272508458,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/index.rs:100:9: replace Buckets::canonical -> usize with 1",
+          "package": "gputrace-bundle",
+          "file": "src/index.rs",
+          "function": {
+            "function_name": "Buckets::canonical",
+            "return_type": "-> usize",
+            "span": {
+              "start": {
+                "line": 98,
+                "column": 5
+              },
+              "end": {
+                "line": 101,
+                "column": 6
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 100,
+              "column": 9
+            },
+            "end": {
+              "line": 100,
+              "column": 66
+            }
+          },
+          "replacement": "1",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__index.rs_line_100_col_9_001.log",
+      "diff_path": "diff/src__index.rs_line_100_col_9_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.700855166,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.274317167,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with None",
+          "package": "gputrace-bundle",
+          "file": "src/store.rs",
+          "function": {
+            "function_name": "read_extent",
+            "return_type": "-> Option<Vec<u8>>",
+            "span": {
+              "start": {
+                "line": 7,
+                "column": 1
+              },
+              "end": {
+                "line": 29,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 16,
+              "column": 5
+            },
+            "end": {
+              "line": 28,
+              "column": 6
+            }
+          },
+          "replacement": "None",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__store.rs_line_16_col_5.log",
+      "diff_path": "diff/src__store.rs_line_16_col_5.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.699143542,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.269321583,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with Some(vec![])",
+          "package": "gputrace-bundle",
+          "file": "src/store.rs",
+          "function": {
+            "function_name": "read_extent",
+            "return_type": "-> Option<Vec<u8>>",
+            "span": {
+              "start": {
+                "line": 7,
+                "column": 1
+              },
+              "end": {
+                "line": 29,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 16,
+              "column": 5
+            },
+            "end": {
+              "line": 28,
+              "column": 6
+            }
+          },
+          "replacement": "Some(vec![])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__store.rs_line_16_col_5_001.log",
+      "diff_path": "diff/src__store.rs_line_16_col_5_001.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.762662333,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.271009333,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with Some(vec![0])",
+          "package": "gputrace-bundle",
+          "file": "src/store.rs",
+          "function": {
+            "function_name": "read_extent",
+            "return_type": "-> Option<Vec<u8>>",
+            "span": {
+              "start": {
+                "line": 7,
+                "column": 1
+              },
+              "end": {
+                "line": 29,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 16,
+              "column": 5
+            },
+            "end": {
+              "line": 28,
+              "column": 6
+            }
+          },
+          "replacement": "Some(vec![0])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__store.rs_line_16_col_5_002.log",
+      "diff_path": "diff/src__store.rs_line_16_col_5_002.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.761890375,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.271413459,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with Some(vec![1])",
+          "package": "gputrace-bundle",
+          "file": "src/store.rs",
+          "function": {
+            "function_name": "read_extent",
+            "return_type": "-> Option<Vec<u8>>",
+            "span": {
+              "start": {
+                "line": 7,
+                "column": 1
+              },
+              "end": {
+                "line": 29,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 16,
+              "column": 5
+            },
+            "end": {
+              "line": 28,
+              "column": 6
+            }
+          },
+          "replacement": "Some(vec![1])",
+          "genre": "FnValue"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__store.rs_line_16_col_5_003.log",
+      "diff_path": "diff/src__store.rs_line_16_col_5_003.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.761232625,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.270119292,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Mutant": {
+          "name": "src/store.rs:26:9: delete match arm Ok(0) in read_extent",
+          "package": "gputrace-bundle",
+          "file": "src/store.rs",
+          "function": {
+            "function_name": "read_extent",
+            "return_type": "-> Option<Vec<u8>>",
+            "span": {
+              "start": {
+                "line": 7,
+                "column": 1
+              },
+              "end": {
+                "line": 29,
+                "column": 2
+              }
+            }
+          },
+          "span": {
+            "start": {
+              "line": 26,
+              "column": 9
+            },
+            "end": {
+              "line": 26,
+              "column": 28
+            }
+          },
+          "replacement": "",
+          "genre": "MatchArm"
+        }
+      },
+      "summary": "CaughtMutant",
+      "log_path": "log/src__store.rs_line_26_col_9.log",
+      "diff_path": "diff/src__store.rs_line_26_col_9.diff",
+      "phase_results": [
+        {
+          "phase": "Build",
+          "duration": 0.7084895,
+          "process_status": "Success",
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--no-run",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        },
+        {
+          "phase": "Test",
+          "duration": 0.269586208,
+          "process_status": {
+            "Failure": 101
+          },
+          "argv": [
+            "/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo",
+            "test",
+            "--verbose",
+            "--package=gputrace-bundle@0.1.0"
+          ]
+        }
+      ]
+    }
+  ],
+  "total_mutants": 84,
+  "missed": 0,
+  "caught": 77,
+  "timeout": 0,
+  "unviable": 7,
+  "success": 0,
+  "start_time": "2026-09-03T21:32:23.851646Z",
+  "end_time": "2026-09-03T21:33:50.859179Z",
+  "cargo_mutants_version": "27.1.0"
+}

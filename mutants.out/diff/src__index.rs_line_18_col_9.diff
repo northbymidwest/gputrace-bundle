@@ -1,0 +1,31 @@
+--- src/index.rs
++++ replace Header::parse -> Result<Header, Error> with Ok(Default::default())
+@@ -10,27 +10,17 @@
+ 
+ pub(crate) struct Header {
+     pub bucket_count: u32,
+     pub record_count: u32,
+ }
+ 
+ impl Header {
+     pub fn parse(index: &[u8]) -> Result<Header, Error> {
+-        let head = index
+-            .get(..HEADER_LEN)
+-            .ok_or(Error::BadIndex("index shorter than header"))?;
+-        if &head[..4] != XDIC_MAGIC {
+-            return Err(Error::BadIndex("bad xdic magic"));
+-        }
+-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());
+-        Ok(Header {
+-            bucket_count: word(2),
+-            record_count: word(3),
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The record array begins after the header and the bucket table.
+     pub fn record_array_offset(&self) -> Result<usize, Error> {
+         (self.bucket_count as usize)
+             .checked_mul(BUCKET_SIZE)
+             .and_then(|b| b.checked_add(HEADER_LEN))
+             .ok_or(Error::BadIndex("record array offset overflow"))

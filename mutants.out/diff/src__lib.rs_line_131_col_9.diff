@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ replace Bundle::name -> &str with ""
+@@ -123,17 +123,17 @@
+         &self.textures
+     }
+ 
+     pub fn texture_count(&self) -> usize {
+         self.textures.len()
+     }
+ 
+     pub fn name(&self) -> &str {
+-        &self.name
++        "" /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {
+     let p = dir.join(member);
+     if !p.exists() {
+         return Err(Error::MissingMember { member });
+     }

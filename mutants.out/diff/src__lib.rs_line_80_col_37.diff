@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ replace != with == in Bundle::open
+@@ -72,17 +72,17 @@
+         }
+         let buckets = Buckets::build(&index, &header);
+         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);
+ 
+         // Collect every 248-byte record's payload (alias-resolved), with the
+         // canonical record's store0 offset.
+         let mut payloads: Vec<(u64, Vec<u8>)> = Vec::new();
+         for (id, r) in records.iter().enumerate() {
+-            if r.usize_len as usize != DESC_SIZE {
++            if r.usize_len as usize == /* ~ changed by cargo-mutants ~ */ DESC_SIZE {
+                 continue;
+             }
+             let cid = canonical(id);
+             let cr = match records.get(cid) {
+                 // canonical must hold real bytes, and be a 248-byte descriptor
+                 // itself - otherwise an alias could redirect to a record with
+                 // an arbitrary `usize_len`, forcing a huge transient
+                 // allocation in `store::read_extent`.

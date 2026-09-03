@@ -1,0 +1,21 @@
+--- src/index.rs
++++ replace Buckets::canonical -> usize with 0
+@@ -92,17 +92,17 @@
+             seen[ti] = true;
+             canonical[ti] = canon;
+         }
+         Some(Buckets { canonical })
+     }
+ 
+     /// The record holding `id`'s bytes (itself when not aliased).
+     pub fn canonical(&self, id: usize) -> usize {
+-        self.canonical.get(id).map(|&c| c as usize).unwrap_or(id)
++        0 /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     // Header: xdic magic, then u32 words. word2 = bucket count, word3 = record

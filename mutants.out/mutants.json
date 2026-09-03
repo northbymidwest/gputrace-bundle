@@ -1,0 +1,2690 @@
+[
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::open -> Result<Bundle, Error> with Ok(Default::default())\n@@ -40,86 +40,17 @@\n #[derive(Debug)]\n pub struct Bundle {\n     name: String,\n     textures: Vec<TextureDescriptor>,\n }\n \n impl Bundle {\n     pub fn open(path: &Path) -> Result<Bundle, Error> {\n-        if !path.is_dir() {\n-            return Err(Error::NotABundle(path.to_path_buf()));\n-        }\n-        let index = read_member(path, \"index\")?;\n-        let store0 = read_member(path, \"store0\")?;\n-\n-        let header = Header::parse(&index)?;\n-        let rec_off = header.record_array_offset()?;\n-        // `record_count` is untrusted (a u32 straight from the header); bound\n-        // it by the actual index size before trusting it to size an\n-        // allocation - a huge claimed count with a short index is rejected\n-        // here rather than driving a huge `Vec::with_capacity`.\n-        let record_array_len = (header.record_count as usize)\n-            .checked_mul(RECORD_SIZE)\n-            .and_then(|len| rec_off.checked_add(len))\n-            .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n-        if record_array_len > index.len() {\n-            return Err(Error::BadIndex(\"record array exceeds index size\"));\n-        }\n-        let mut records = Vec::with_capacity(header.record_count as usize);\n-        for i in 0..header.record_count as usize {\n-            let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n-                .ok_or(Error::BadIndex(\"record array truncated\"))?;\n-            records.push(r);\n-        }\n-        let buckets = Buckets::build(&index, &header);\n-        let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);\n-\n-        // Collect every 248-byte record's payload (alias-resolved), with the\n-        // canonical record's store0 offset.\n-        let mut payloads: Vec<(u64, Vec<u8>)> = Vec::new();\n-        for (id, r) in records.iter().enumerate() {\n-            if r.usize_len as usize != DESC_SIZE {\n-                continue;\n-            }\n-            let cid = canonical(id);\n-            let cr = match records.get(cid) {\n-                // canonical must hold real bytes, and be a 248-byte descriptor\n-                // itself - otherwise an alias could redirect to a record with\n-                // an arbitrary `usize_len`, forcing a huge transient\n-                // allocation in `store::read_extent`.\n-                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n-                _ => continue,\n-            };\n-            if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n-                && p.len() == DESC_SIZE\n-            {\n-                payloads.push((cr.store0_offset, p));\n-            }\n-        }\n-\n-        let tag = derive_tag(\n-            &payloads\n-                .iter()\n-                .map(|(_, p)| descriptor_tag(p))\n-                .collect::<Vec<_>>(),\n-        );\n-        let mut textures: Vec<TextureDescriptor> = payloads\n-            .iter()\n-            .filter(|(_, p)| Some(descriptor_tag(p)) == tag)\n-            .map(|(off, p)| parse_descriptor(p, *off))\n-            .collect();\n-        textures.sort_by_key(|d| d.store0_offset);\n-\n-        let name = path\n-            .file_stem()\n-            .and_then(|s| s.to_str())\n-            .unwrap_or(\"trace\")\n-            .to_string();\n-        Ok(Bundle { name, textures })\n+        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge\n     /// order that corresponds rank-for-rank with ascending fetch streamRefs).\n     pub fn textures(&self) -> &[TextureDescriptor] {\n         &self.textures\n     }\n \n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:48:9: replace Bundle::open -> Result<Bundle, Error> with Ok(Default::default())",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(Default::default())",
+    "span": {
+      "end": {
+        "column": 38,
+        "line": 117
+      },
+      "start": {
+        "column": 9,
+        "line": 48
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ delete ! in Bundle::open\n@@ -40,17 +40,17 @@\n #[derive(Debug)]\n pub struct Bundle {\n     name: String,\n     textures: Vec<TextureDescriptor>,\n }\n \n impl Bundle {\n     pub fn open(path: &Path) -> Result<Bundle, Error> {\n-        if !path.is_dir() {\n+        if  /* ~ changed by cargo-mutants ~ */path.is_dir() {\n             return Err(Error::NotABundle(path.to_path_buf()));\n         }\n         let index = read_member(path, \"index\")?;\n         let store0 = read_member(path, \"store0\")?;\n \n         let header = Header::parse(&index)?;\n         let rec_off = header.record_array_offset()?;\n         // `record_count` is untrusted (a u32 straight from the header); bound\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "UnaryOperator",
+    "name": "src/lib.rs:48:12: delete ! in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 13,
+        "line": 48
+      },
+      "start": {
+        "column": 12,
+        "line": 48
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace > with == in Bundle::open\n@@ -56,17 +56,17 @@\n         // `record_count` is untrusted (a u32 straight from the header); bound\n         // it by the actual index size before trusting it to size an\n         // allocation - a huge claimed count with a short index is rejected\n         // here rather than driving a huge `Vec::with_capacity`.\n         let record_array_len = (header.record_count as usize)\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n-        if record_array_len > index.len() {\n+        if record_array_len == /* ~ changed by cargo-mutants ~ */ index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n             let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:64:29: replace > with == in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 64
+      },
+      "start": {
+        "column": 29,
+        "line": 64
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace > with < in Bundle::open\n@@ -56,17 +56,17 @@\n         // `record_count` is untrusted (a u32 straight from the header); bound\n         // it by the actual index size before trusting it to size an\n         // allocation - a huge claimed count with a short index is rejected\n         // here rather than driving a huge `Vec::with_capacity`.\n         let record_array_len = (header.record_count as usize)\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n-        if record_array_len > index.len() {\n+        if record_array_len < /* ~ changed by cargo-mutants ~ */ index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n             let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:64:29: replace > with < in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 64
+      },
+      "start": {
+        "column": 29,
+        "line": 64
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace > with >= in Bundle::open\n@@ -56,17 +56,17 @@\n         // `record_count` is untrusted (a u32 straight from the header); bound\n         // it by the actual index size before trusting it to size an\n         // allocation - a huge claimed count with a short index is rejected\n         // here rather than driving a huge `Vec::with_capacity`.\n         let record_array_len = (header.record_count as usize)\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n-        if record_array_len > index.len() {\n+        if record_array_len >= /* ~ changed by cargo-mutants ~ */ index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n             let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:64:29: replace > with >= in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": ">=",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 64
+      },
+      "start": {
+        "column": 29,
+        "line": 64
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace + with - in Bundle::open\n@@ -61,17 +61,17 @@\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n         if record_array_len > index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n-            let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n+            let r = Record::parse_at(&index, rec_off - /* ~ changed by cargo-mutants ~ */ i * RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n         let buckets = Buckets::build(&index, &header);\n         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);\n \n         // Collect every 248-byte record's payload (alias-resolved), with the\n         // canonical record's store0 offset.\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:69:54: replace + with - in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "-",
+    "span": {
+      "end": {
+        "column": 55,
+        "line": 69
+      },
+      "start": {
+        "column": 54,
+        "line": 69
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace + with * in Bundle::open\n@@ -61,17 +61,17 @@\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n         if record_array_len > index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n-            let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n+            let r = Record::parse_at(&index, rec_off * /* ~ changed by cargo-mutants ~ */ i * RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n         let buckets = Buckets::build(&index, &header);\n         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);\n \n         // Collect every 248-byte record's payload (alias-resolved), with the\n         // canonical record's store0 offset.\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:69:54: replace + with * in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 55,
+        "line": 69
+      },
+      "start": {
+        "column": 54,
+        "line": 69
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace * with + in Bundle::open\n@@ -61,17 +61,17 @@\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n         if record_array_len > index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n-            let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n+            let r = Record::parse_at(&index, rec_off + i + /* ~ changed by cargo-mutants ~ */ RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n         let buckets = Buckets::build(&index, &header);\n         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);\n \n         // Collect every 248-byte record's payload (alias-resolved), with the\n         // canonical record's store0 offset.\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:69:58: replace * with + in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 69
+      },
+      "start": {
+        "column": 58,
+        "line": 69
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace * with / in Bundle::open\n@@ -61,17 +61,17 @@\n             .checked_mul(RECORD_SIZE)\n             .and_then(|len| rec_off.checked_add(len))\n             .ok_or(Error::BadIndex(\"record array exceeds index size\"))?;\n         if record_array_len > index.len() {\n             return Err(Error::BadIndex(\"record array exceeds index size\"));\n         }\n         let mut records = Vec::with_capacity(header.record_count as usize);\n         for i in 0..header.record_count as usize {\n-            let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)\n+            let r = Record::parse_at(&index, rec_off + i / /* ~ changed by cargo-mutants ~ */ RECORD_SIZE)\n                 .ok_or(Error::BadIndex(\"record array truncated\"))?;\n             records.push(r);\n         }\n         let buckets = Buckets::build(&index, &header);\n         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);\n \n         // Collect every 248-byte record's payload (alias-resolved), with the\n         // canonical record's store0 offset.\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:69:58: replace * with / in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 69
+      },
+      "start": {
+        "column": 58,
+        "line": 69
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace != with == in Bundle::open\n@@ -72,17 +72,17 @@\n         }\n         let buckets = Buckets::build(&index, &header);\n         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);\n \n         // Collect every 248-byte record's payload (alias-resolved), with the\n         // canonical record's store0 offset.\n         let mut payloads: Vec<(u64, Vec<u8>)> = Vec::new();\n         for (id, r) in records.iter().enumerate() {\n-            if r.usize_len as usize != DESC_SIZE {\n+            if r.usize_len as usize == /* ~ changed by cargo-mutants ~ */ DESC_SIZE {\n                 continue;\n             }\n             let cid = canonical(id);\n             let cr = match records.get(cid) {\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:80:37: replace != with == in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 80
+      },
+      "start": {
+        "column": 37,
+        "line": 80
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace match guard !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE with true in Bundle::open\n@@ -81,17 +81,17 @@\n                 continue;\n             }\n             let cid = canonical(id);\n             let cr = match records.get(cid) {\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n-                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n+                Some(cr) if true /* ~ changed by cargo-mutants ~ */ => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n                 && p.len() == DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "MatchArmGuard",
+    "name": "src/lib.rs:89:29: replace match guard !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE with true in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 84,
+        "line": 89
+      },
+      "start": {
+        "column": 29,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace match guard !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE with false in Bundle::open\n@@ -81,17 +81,17 @@\n                 continue;\n             }\n             let cid = canonical(id);\n             let cr = match records.get(cid) {\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n-                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n+                Some(cr) if false /* ~ changed by cargo-mutants ~ */ => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n                 && p.len() == DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "MatchArmGuard",
+    "name": "src/lib.rs:89:29: replace match guard !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE with false in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 84,
+        "line": 89
+      },
+      "start": {
+        "column": 29,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace && with || in Bundle::open\n@@ -81,17 +81,17 @@\n                 continue;\n             }\n             let cid = canonical(id);\n             let cr = match records.get(cid) {\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n-                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n+                Some(cr) if !cr.is_alias(cid) || /* ~ changed by cargo-mutants ~ */ cr.usize_len as usize == DESC_SIZE => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n                 && p.len() == DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:89:47: replace && with || in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "||",
+    "span": {
+      "end": {
+        "column": 49,
+        "line": 89
+      },
+      "start": {
+        "column": 47,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ delete ! in Bundle::open\n@@ -81,17 +81,17 @@\n                 continue;\n             }\n             let cid = canonical(id);\n             let cr = match records.get(cid) {\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n-                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n+                Some(cr) if  /* ~ changed by cargo-mutants ~ */cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n                 && p.len() == DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "UnaryOperator",
+    "name": "src/lib.rs:89:29: delete ! in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 89
+      },
+      "start": {
+        "column": 29,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace == with != in Bundle::open\n@@ -81,17 +81,17 @@\n                 continue;\n             }\n             let cid = canonical(id);\n             let cr = match records.get(cid) {\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n-                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n+                Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize != /* ~ changed by cargo-mutants ~ */ DESC_SIZE => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n                 && p.len() == DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:89:72: replace == with != in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 74,
+        "line": 89
+      },
+      "start": {
+        "column": 72,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace && with || in Bundle::open\n@@ -85,17 +85,17 @@\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n                 Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n-                && p.len() == DESC_SIZE\n+                || /* ~ changed by cargo-mutants ~ */ p.len() == DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n \n         let tag = derive_tag(\n             &payloads\n                 .iter()\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:93:17: replace && with || in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "||",
+    "span": {
+      "end": {
+        "column": 19,
+        "line": 93
+      },
+      "start": {
+        "column": 17,
+        "line": 93
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace == with != in Bundle::open\n@@ -85,17 +85,17 @@\n                 // canonical must hold real bytes, and be a 248-byte descriptor\n                 // itself - otherwise an alias could redirect to a record with\n                 // an arbitrary `usize_len`, forcing a huge transient\n                 // allocation in `store::read_extent`.\n                 Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,\n                 _ => continue,\n             };\n             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)\n-                && p.len() == DESC_SIZE\n+                && p.len() != /* ~ changed by cargo-mutants ~ */ DESC_SIZE\n             {\n                 payloads.push((cr.store0_offset, p));\n             }\n         }\n \n         let tag = derive_tag(\n             &payloads\n                 .iter()\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:93:28: replace == with != in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 93
+      },
+      "start": {
+        "column": 28,
+        "line": 93
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace == with != in Bundle::open\n@@ -99,17 +99,17 @@\n         let tag = derive_tag(\n             &payloads\n                 .iter()\n                 .map(|(_, p)| descriptor_tag(p))\n                 .collect::<Vec<_>>(),\n         );\n         let mut textures: Vec<TextureDescriptor> = payloads\n             .iter()\n-            .filter(|(_, p)| Some(descriptor_tag(p)) == tag)\n+            .filter(|(_, p)| Some(descriptor_tag(p)) != /* ~ changed by cargo-mutants ~ */ tag)\n             .map(|(off, p)| parse_descriptor(p, *off))\n             .collect();\n         textures.sort_by_key(|d| d.store0_offset);\n \n         let name = path\n             .file_stem()\n             .and_then(|s| s.to_str())\n             .unwrap_or(\"trace\")\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::open",
+      "return_type": "-> Result<Bundle, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 118
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/lib.rs:107:54: replace == with != in Bundle::open",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 56,
+        "line": 107
+      },
+      "start": {
+        "column": 54,
+        "line": 107
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(Vec::new())\n@@ -115,17 +115,17 @@\n             .unwrap_or(\"trace\")\n             .to_string();\n         Ok(Bundle { name, textures })\n     }\n \n     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge\n     /// order that corresponds rank-for-rank with ascending fetch streamRefs).\n     pub fn textures(&self) -> &[TextureDescriptor] {\n-        &self.textures\n+        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn texture_count(&self) -> usize {\n         self.textures.len()\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::textures",
+      "return_type": "-> &[TextureDescriptor]",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 124
+        },
+        "start": {
+          "column": 5,
+          "line": 120
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:123:9: replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(Vec::new())",
+    "package": "gputrace-bundle",
+    "replacement": "Vec::leak(Vec::new())",
+    "span": {
+      "end": {
+        "column": 23,
+        "line": 123
+      },
+      "start": {
+        "column": 9,
+        "line": 123
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(vec![Default::default()])\n@@ -115,17 +115,17 @@\n             .unwrap_or(\"trace\")\n             .to_string();\n         Ok(Bundle { name, textures })\n     }\n \n     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge\n     /// order that corresponds rank-for-rank with ascending fetch streamRefs).\n     pub fn textures(&self) -> &[TextureDescriptor] {\n-        &self.textures\n+        Vec::leak(vec![Default::default()]) /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn texture_count(&self) -> usize {\n         self.textures.len()\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::textures",
+      "return_type": "-> &[TextureDescriptor]",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 124
+        },
+        "start": {
+          "column": 5,
+          "line": 120
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:123:9: replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(vec![Default::default()])",
+    "package": "gputrace-bundle",
+    "replacement": "Vec::leak(vec![Default::default()])",
+    "span": {
+      "end": {
+        "column": 23,
+        "line": 123
+      },
+      "start": {
+        "column": 9,
+        "line": 123
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::texture_count -> usize with 0\n@@ -119,17 +119,17 @@\n \n     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge\n     /// order that corresponds rank-for-rank with ascending fetch streamRefs).\n     pub fn textures(&self) -> &[TextureDescriptor] {\n         &self.textures\n     }\n \n     pub fn texture_count(&self) -> usize {\n-        self.textures.len()\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::texture_count",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 128
+        },
+        "start": {
+          "column": 5,
+          "line": 126
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:127:9: replace Bundle::texture_count -> usize with 0",
+    "package": "gputrace-bundle",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 28,
+        "line": 127
+      },
+      "start": {
+        "column": 9,
+        "line": 127
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::texture_count -> usize with 1\n@@ -119,17 +119,17 @@\n \n     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge\n     /// order that corresponds rank-for-rank with ascending fetch streamRefs).\n     pub fn textures(&self) -> &[TextureDescriptor] {\n         &self.textures\n     }\n \n     pub fn texture_count(&self) -> usize {\n-        self.textures.len()\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::texture_count",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 128
+        },
+        "start": {
+          "column": 5,
+          "line": 126
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:127:9: replace Bundle::texture_count -> usize with 1",
+    "package": "gputrace-bundle",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 28,
+        "line": 127
+      },
+      "start": {
+        "column": 9,
+        "line": 127
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::name -> &str with \"\"\n@@ -123,17 +123,17 @@\n         &self.textures\n     }\n \n     pub fn texture_count(&self) -> usize {\n         self.textures.len()\n     }\n \n     pub fn name(&self) -> &str {\n-        &self.name\n+        \"\" /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n     let p = dir.join(member);\n     if !p.exists() {\n         return Err(Error::MissingMember { member });\n     }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::name",
+      "return_type": "-> &str",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 132
+        },
+        "start": {
+          "column": 5,
+          "line": 130
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:131:9: replace Bundle::name -> &str with \"\"",
+    "package": "gputrace-bundle",
+    "replacement": "\"\"",
+    "span": {
+      "end": {
+        "column": 19,
+        "line": 131
+      },
+      "start": {
+        "column": 9,
+        "line": 131
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace Bundle::name -> &str with \"xyzzy\"\n@@ -123,17 +123,17 @@\n         &self.textures\n     }\n \n     pub fn texture_count(&self) -> usize {\n         self.textures.len()\n     }\n \n     pub fn name(&self) -> &str {\n-        &self.name\n+        \"xyzzy\" /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n     let p = dir.join(member);\n     if !p.exists() {\n         return Err(Error::MissingMember { member });\n     }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "Bundle::name",
+      "return_type": "-> &str",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 132
+        },
+        "start": {
+          "column": 5,
+          "line": 130
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:131:9: replace Bundle::name -> &str with \"xyzzy\"",
+    "package": "gputrace-bundle",
+    "replacement": "\"xyzzy\"",
+    "span": {
+      "end": {
+        "column": 19,
+        "line": 131
+      },
+      "start": {
+        "column": 9,
+        "line": 131
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace read_member -> Result<Vec<u8>, Error> with Ok(vec![])\n@@ -128,14 +128,10 @@\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n-    let p = dir.join(member);\n-    if !p.exists() {\n-        return Err(Error::MissingMember { member });\n-    }\n-    std::fs::read(&p).map_err(|source| Error::Io { path: p, source })\n+    Ok(vec![]) /* ~ changed by cargo-mutants ~ */\n }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "read_member",
+      "return_type": "-> Result<Vec<u8>, Error>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 141
+        },
+        "start": {
+          "column": 1,
+          "line": 135
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:136:5: replace read_member -> Result<Vec<u8>, Error> with Ok(vec![])",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(vec![])",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 140
+      },
+      "start": {
+        "column": 5,
+        "line": 136
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace read_member -> Result<Vec<u8>, Error> with Ok(vec![0])\n@@ -128,14 +128,10 @@\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n-    let p = dir.join(member);\n-    if !p.exists() {\n-        return Err(Error::MissingMember { member });\n-    }\n-    std::fs::read(&p).map_err(|source| Error::Io { path: p, source })\n+    Ok(vec![0]) /* ~ changed by cargo-mutants ~ */\n }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "read_member",
+      "return_type": "-> Result<Vec<u8>, Error>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 141
+        },
+        "start": {
+          "column": 1,
+          "line": 135
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:136:5: replace read_member -> Result<Vec<u8>, Error> with Ok(vec![0])",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(vec![0])",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 140
+      },
+      "start": {
+        "column": 5,
+        "line": 136
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ replace read_member -> Result<Vec<u8>, Error> with Ok(vec![1])\n@@ -128,14 +128,10 @@\n     }\n \n     pub fn name(&self) -> &str {\n         &self.name\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n-    let p = dir.join(member);\n-    if !p.exists() {\n-        return Err(Error::MissingMember { member });\n-    }\n-    std::fs::read(&p).map_err(|source| Error::Io { path: p, source })\n+    Ok(vec![1]) /* ~ changed by cargo-mutants ~ */\n }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "read_member",
+      "return_type": "-> Result<Vec<u8>, Error>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 141
+        },
+        "start": {
+          "column": 1,
+          "line": 135
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/lib.rs:136:5: replace read_member -> Result<Vec<u8>, Error> with Ok(vec![1])",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(vec![1])",
+    "span": {
+      "end": {
+        "column": 70,
+        "line": 140
+      },
+      "start": {
+        "column": 5,
+        "line": 136
+      }
+    }
+  },
+  {
+    "diff": "--- src/lib.rs\n+++ delete ! in read_member\n@@ -129,13 +129,13 @@\n \n     pub fn name(&self) -> &str {\n         &self.name\n     }\n }\n \n fn read_member(dir: &Path, member: &'static str) -> Result<Vec<u8>, Error> {\n     let p = dir.join(member);\n-    if !p.exists() {\n+    if  /* ~ changed by cargo-mutants ~ */p.exists() {\n         return Err(Error::MissingMember { member });\n     }\n     std::fs::read(&p).map_err(|source| Error::Io { path: p, source })\n }\n",
+    "file": "src/lib.rs",
+    "function": {
+      "function_name": "read_member",
+      "return_type": "-> Result<Vec<u8>, Error>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 141
+        },
+        "start": {
+          "column": 1,
+          "line": 135
+        }
+      }
+    },
+    "genre": "UnaryOperator",
+    "name": "src/lib.rs:137:8: delete ! in read_member",
+    "package": "gputrace-bundle",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 9,
+        "line": 137
+      },
+      "start": {
+        "column": 8,
+        "line": 137
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace word -> u64 with 0\n@@ -20,21 +20,17 @@\n     pub array_length: u32,\n     pub sample_count: u32,\n     pub usage: u64,\n     pub texture_id: u64,\n }\n \n /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.\n fn word(payload: &[u8], i: usize) -> u64 {\n-    let o = i * 8;\n-    payload\n-        .get(o..o + 8)\n-        .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n-        .unwrap_or(0)\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n     word(payload, 0)\n }\n \n pub(crate) fn parse_descriptor(payload: &[u8], store0_offset: u64) -> TextureDescriptor {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "word",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 33
+        },
+        "start": {
+          "column": 1,
+          "line": 26
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:28:5: replace word -> u64 with 0",
+    "package": "gputrace-bundle",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 32
+      },
+      "start": {
+        "column": 5,
+        "line": 28
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace word -> u64 with 1\n@@ -20,21 +20,17 @@\n     pub array_length: u32,\n     pub sample_count: u32,\n     pub usage: u64,\n     pub texture_id: u64,\n }\n \n /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.\n fn word(payload: &[u8], i: usize) -> u64 {\n-    let o = i * 8;\n-    payload\n-        .get(o..o + 8)\n-        .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n-        .unwrap_or(0)\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n     word(payload, 0)\n }\n \n pub(crate) fn parse_descriptor(payload: &[u8], store0_offset: u64) -> TextureDescriptor {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "word",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 33
+        },
+        "start": {
+          "column": 1,
+          "line": 26
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:28:5: replace word -> u64 with 1",
+    "package": "gputrace-bundle",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 22,
+        "line": 32
+      },
+      "start": {
+        "column": 5,
+        "line": 28
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace * with + in word\n@@ -20,17 +20,17 @@\n     pub array_length: u32,\n     pub sample_count: u32,\n     pub usage: u64,\n     pub texture_id: u64,\n }\n \n /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.\n fn word(payload: &[u8], i: usize) -> u64 {\n-    let o = i * 8;\n+    let o = i + /* ~ changed by cargo-mutants ~ */ 8;\n     payload\n         .get(o..o + 8)\n         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n         .unwrap_or(0)\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "word",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 33
+        },
+        "start": {
+          "column": 1,
+          "line": 26
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/descriptor.rs:28:15: replace * with + in word",
+    "package": "gputrace-bundle",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 16,
+        "line": 28
+      },
+      "start": {
+        "column": 15,
+        "line": 28
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace * with / in word\n@@ -20,17 +20,17 @@\n     pub array_length: u32,\n     pub sample_count: u32,\n     pub usage: u64,\n     pub texture_id: u64,\n }\n \n /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.\n fn word(payload: &[u8], i: usize) -> u64 {\n-    let o = i * 8;\n+    let o = i / /* ~ changed by cargo-mutants ~ */ 8;\n     payload\n         .get(o..o + 8)\n         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n         .unwrap_or(0)\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "word",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 33
+        },
+        "start": {
+          "column": 1,
+          "line": 26
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/descriptor.rs:28:15: replace * with / in word",
+    "package": "gputrace-bundle",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 16,
+        "line": 28
+      },
+      "start": {
+        "column": 15,
+        "line": 28
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace + with - in word\n@@ -22,17 +22,17 @@\n     pub usage: u64,\n     pub texture_id: u64,\n }\n \n /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.\n fn word(payload: &[u8], i: usize) -> u64 {\n     let o = i * 8;\n     payload\n-        .get(o..o + 8)\n+        .get(o..o - /* ~ changed by cargo-mutants ~ */ 8)\n         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n         .unwrap_or(0)\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n     word(payload, 0)\n }\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "word",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 33
+        },
+        "start": {
+          "column": 1,
+          "line": 26
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/descriptor.rs:30:19: replace + with - in word",
+    "package": "gputrace-bundle",
+    "replacement": "-",
+    "span": {
+      "end": {
+        "column": 20,
+        "line": 30
+      },
+      "start": {
+        "column": 19,
+        "line": 30
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace + with * in word\n@@ -22,17 +22,17 @@\n     pub usage: u64,\n     pub texture_id: u64,\n }\n \n /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.\n fn word(payload: &[u8], i: usize) -> u64 {\n     let o = i * 8;\n     payload\n-        .get(o..o + 8)\n+        .get(o..o * /* ~ changed by cargo-mutants ~ */ 8)\n         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n         .unwrap_or(0)\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n     word(payload, 0)\n }\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "word",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 33
+        },
+        "start": {
+          "column": 1,
+          "line": 26
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/descriptor.rs:30:19: replace + with * in word",
+    "package": "gputrace-bundle",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 20,
+        "line": 30
+      },
+      "start": {
+        "column": 19,
+        "line": 30
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace descriptor_tag -> u64 with 0\n@@ -29,17 +29,17 @@\n     payload\n         .get(o..o + 8)\n         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n         .unwrap_or(0)\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n-    word(payload, 0)\n+    0 /* ~ changed by cargo-mutants ~ */\n }\n \n pub(crate) fn parse_descriptor(payload: &[u8], store0_offset: u64) -> TextureDescriptor {\n     TextureDescriptor {\n         store0_offset,\n         texture_type: word(payload, 1) as u32,\n         format: word(payload, 2) as u32,\n         width: word(payload, 3) as u32,\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "descriptor_tag",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 38
+        },
+        "start": {
+          "column": 1,
+          "line": 35
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:37:5: replace descriptor_tag -> u64 with 0",
+    "package": "gputrace-bundle",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 21,
+        "line": 37
+      },
+      "start": {
+        "column": 5,
+        "line": 37
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace descriptor_tag -> u64 with 1\n@@ -29,17 +29,17 @@\n     payload\n         .get(o..o + 8)\n         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))\n         .unwrap_or(0)\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n-    word(payload, 0)\n+    1 /* ~ changed by cargo-mutants ~ */\n }\n \n pub(crate) fn parse_descriptor(payload: &[u8], store0_offset: u64) -> TextureDescriptor {\n     TextureDescriptor {\n         store0_offset,\n         texture_type: word(payload, 1) as u32,\n         format: word(payload, 2) as u32,\n         width: word(payload, 3) as u32,\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "descriptor_tag",
+      "return_type": "-> u64",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 38
+        },
+        "start": {
+          "column": 1,
+          "line": 35
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:37:5: replace descriptor_tag -> u64 with 1",
+    "package": "gputrace-bundle",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 21,
+        "line": 37
+      },
+      "start": {
+        "column": 5,
+        "line": 37
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace parse_descriptor -> TextureDescriptor with Default::default()\n@@ -33,29 +33,17 @@\n }\n \n /// Word 0: the per-capture descriptor tag shared by every descriptor struct.\n pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {\n     word(payload, 0)\n }\n \n pub(crate) fn parse_descriptor(payload: &[u8], store0_offset: u64) -> TextureDescriptor {\n-    TextureDescriptor {\n-        store0_offset,\n-        texture_type: word(payload, 1) as u32,\n-        format: word(payload, 2) as u32,\n-        width: word(payload, 3) as u32,\n-        height: word(payload, 4) as u32,\n-        depth: word(payload, 5) as u32,\n-        mip_levels: word(payload, 6) as u32,\n-        array_length: word(payload, 7) as u32,\n-        sample_count: word(payload, 8) as u32,\n-        usage: word(payload, 11),\n-        texture_id: word(payload, 17),\n-    }\n+    Default::default() /* ~ changed by cargo-mutants ~ */\n }\n \n /// The capture's descriptor tag: the most common word-0 value among the\n /// 248-byte payloads. `None` when there are none.\n pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {\n     let mut votes: HashMap<u64, usize> = HashMap::new();\n     for &w in word0s {\n         *votes.entry(w).or_default() += 1;\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "parse_descriptor",
+      "return_type": "-> TextureDescriptor",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 54
+        },
+        "start": {
+          "column": 1,
+          "line": 40
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:41:5: replace parse_descriptor -> TextureDescriptor with Default::default()",
+    "package": "gputrace-bundle",
+    "replacement": "Default::default()",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 53
+      },
+      "start": {
+        "column": 5,
+        "line": 41
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace derive_tag -> Option<u64> with None\n@@ -51,23 +51,17 @@\n         usage: word(payload, 11),\n         texture_id: word(payload, 17),\n     }\n }\n \n /// The capture's descriptor tag: the most common word-0 value among the\n /// 248-byte payloads. `None` when there are none.\n pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {\n-    let mut votes: HashMap<u64, usize> = HashMap::new();\n-    for &w in word0s {\n-        *votes.entry(w).or_default() += 1;\n-    }\n-    // Ties are broken by the tag value (the larger wins), so the result is\n-    // deterministic rather than dependent on HashMap iteration order.\n-    votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)\n+    None /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     // Build a synthetic 248-byte descriptor: 31 LE u64 words, tag at word 0.\n     fn desc(tag: u64, fields: &[(usize, u64)]) -> Vec<u8> {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "derive_tag",
+      "return_type": "-> Option<u64>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 66
+        },
+        "start": {
+          "column": 1,
+          "line": 56
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:59:5: replace derive_tag -> Option<u64> with None",
+    "package": "gputrace-bundle",
+    "replacement": "None",
+    "span": {
+      "end": {
+        "column": 67,
+        "line": 65
+      },
+      "start": {
+        "column": 5,
+        "line": 59
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace derive_tag -> Option<u64> with Some(0)\n@@ -51,23 +51,17 @@\n         usage: word(payload, 11),\n         texture_id: word(payload, 17),\n     }\n }\n \n /// The capture's descriptor tag: the most common word-0 value among the\n /// 248-byte payloads. `None` when there are none.\n pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {\n-    let mut votes: HashMap<u64, usize> = HashMap::new();\n-    for &w in word0s {\n-        *votes.entry(w).or_default() += 1;\n-    }\n-    // Ties are broken by the tag value (the larger wins), so the result is\n-    // deterministic rather than dependent on HashMap iteration order.\n-    votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)\n+    Some(0) /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     // Build a synthetic 248-byte descriptor: 31 LE u64 words, tag at word 0.\n     fn desc(tag: u64, fields: &[(usize, u64)]) -> Vec<u8> {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "derive_tag",
+      "return_type": "-> Option<u64>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 66
+        },
+        "start": {
+          "column": 1,
+          "line": 56
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:59:5: replace derive_tag -> Option<u64> with Some(0)",
+    "package": "gputrace-bundle",
+    "replacement": "Some(0)",
+    "span": {
+      "end": {
+        "column": 67,
+        "line": 65
+      },
+      "start": {
+        "column": 5,
+        "line": 59
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace derive_tag -> Option<u64> with Some(1)\n@@ -51,23 +51,17 @@\n         usage: word(payload, 11),\n         texture_id: word(payload, 17),\n     }\n }\n \n /// The capture's descriptor tag: the most common word-0 value among the\n /// 248-byte payloads. `None` when there are none.\n pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {\n-    let mut votes: HashMap<u64, usize> = HashMap::new();\n-    for &w in word0s {\n-        *votes.entry(w).or_default() += 1;\n-    }\n-    // Ties are broken by the tag value (the larger wins), so the result is\n-    // deterministic rather than dependent on HashMap iteration order.\n-    votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)\n+    Some(1) /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     // Build a synthetic 248-byte descriptor: 31 LE u64 words, tag at word 0.\n     fn desc(tag: u64, fields: &[(usize, u64)]) -> Vec<u8> {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "derive_tag",
+      "return_type": "-> Option<u64>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 66
+        },
+        "start": {
+          "column": 1,
+          "line": 56
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/descriptor.rs:59:5: replace derive_tag -> Option<u64> with Some(1)",
+    "package": "gputrace-bundle",
+    "replacement": "Some(1)",
+    "span": {
+      "end": {
+        "column": 67,
+        "line": 65
+      },
+      "start": {
+        "column": 5,
+        "line": 59
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace += with -= in derive_tag\n@@ -53,17 +53,17 @@\n     }\n }\n \n /// The capture's descriptor tag: the most common word-0 value among the\n /// 248-byte payloads. `None` when there are none.\n pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {\n     let mut votes: HashMap<u64, usize> = HashMap::new();\n     for &w in word0s {\n-        *votes.entry(w).or_default() += 1;\n+        *votes.entry(w).or_default() -= /* ~ changed by cargo-mutants ~ */ 1;\n     }\n     // Ties are broken by the tag value (the larger wins), so the result is\n     // deterministic rather than dependent on HashMap iteration order.\n     votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)\n }\n \n #[cfg(test)]\n mod tests {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "derive_tag",
+      "return_type": "-> Option<u64>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 66
+        },
+        "start": {
+          "column": 1,
+          "line": 56
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/descriptor.rs:61:38: replace += with -= in derive_tag",
+    "package": "gputrace-bundle",
+    "replacement": "-=",
+    "span": {
+      "end": {
+        "column": 40,
+        "line": 61
+      },
+      "start": {
+        "column": 38,
+        "line": 61
+      }
+    }
+  },
+  {
+    "diff": "--- src/descriptor.rs\n+++ replace += with *= in derive_tag\n@@ -53,17 +53,17 @@\n     }\n }\n \n /// The capture's descriptor tag: the most common word-0 value among the\n /// 248-byte payloads. `None` when there are none.\n pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {\n     let mut votes: HashMap<u64, usize> = HashMap::new();\n     for &w in word0s {\n-        *votes.entry(w).or_default() += 1;\n+        *votes.entry(w).or_default() *= /* ~ changed by cargo-mutants ~ */ 1;\n     }\n     // Ties are broken by the tag value (the larger wins), so the result is\n     // deterministic rather than dependent on HashMap iteration order.\n     votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)\n }\n \n #[cfg(test)]\n mod tests {\n",
+    "file": "src/descriptor.rs",
+    "function": {
+      "function_name": "derive_tag",
+      "return_type": "-> Option<u64>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 66
+        },
+        "start": {
+          "column": 1,
+          "line": 56
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/descriptor.rs:61:38: replace += with *= in derive_tag",
+    "package": "gputrace-bundle",
+    "replacement": "*=",
+    "span": {
+      "end": {
+        "column": 40,
+        "line": 61
+      },
+      "start": {
+        "column": 38,
+        "line": 61
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Header::parse -> Result<Header, Error> with Ok(Default::default())\n@@ -10,27 +10,17 @@\n \n pub(crate) struct Header {\n     pub bucket_count: u32,\n     pub record_count: u32,\n }\n \n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n-        let head = index\n-            .get(..HEADER_LEN)\n-            .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n-        if &head[..4] != XDIC_MAGIC {\n-            return Err(Error::BadIndex(\"bad xdic magic\"));\n-        }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n-        Ok(Header {\n-            bucket_count: word(2),\n-            record_count: word(3),\n-        })\n+        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n         (self.bucket_count as usize)\n             .checked_mul(BUCKET_SIZE)\n             .and_then(|b| b.checked_add(HEADER_LEN))\n             .ok_or(Error::BadIndex(\"record array offset overflow\"))\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:18:9: replace Header::parse -> Result<Header, Error> with Ok(Default::default())",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(Default::default())",
+    "span": {
+      "end": {
+        "column": 11,
+        "line": 28
+      },
+      "start": {
+        "column": 9,
+        "line": 18
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace != with == in Header::parse\n@@ -13,17 +13,17 @@\n     pub record_count: u32,\n }\n \n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n-        if &head[..4] != XDIC_MAGIC {\n+        if &head[..4] == /* ~ changed by cargo-mutants ~ */ XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n         let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:21:23: replace != with == in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 25,
+        "line": 21
+      },
+      "start": {
+        "column": 23,
+        "line": 21
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace * with + in Header::parse\n@@ -16,17 +16,17 @@\n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n         if &head[..4] != XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n+        let word = |i: usize| u32::from_le_bytes(head[i + /* ~ changed by cargo-mutants ~ */ 4..i * 4 + 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:24:57: replace * with + in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 58,
+        "line": 24
+      },
+      "start": {
+        "column": 57,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace * with / in Header::parse\n@@ -16,17 +16,17 @@\n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n         if &head[..4] != XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n+        let word = |i: usize| u32::from_le_bytes(head[i / /* ~ changed by cargo-mutants ~ */ 4..i * 4 + 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:24:57: replace * with / in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 58,
+        "line": 24
+      },
+      "start": {
+        "column": 57,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace + with - in Header::parse\n@@ -16,17 +16,17 @@\n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n         if &head[..4] != XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n+        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 - /* ~ changed by cargo-mutants ~ */ 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:24:68: replace + with - in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "-",
+    "span": {
+      "end": {
+        "column": 69,
+        "line": 24
+      },
+      "start": {
+        "column": 68,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace + with * in Header::parse\n@@ -16,17 +16,17 @@\n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n         if &head[..4] != XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n+        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 * /* ~ changed by cargo-mutants ~ */ 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:24:68: replace + with * in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 69,
+        "line": 24
+      },
+      "start": {
+        "column": 68,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace * with + in Header::parse\n@@ -16,17 +16,17 @@\n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n         if &head[..4] != XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n+        let word = |i: usize| u32::from_le_bytes(head[i * 4..i + /* ~ changed by cargo-mutants ~ */ 4 + 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:24:64: replace * with + in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 65,
+        "line": 24
+      },
+      "start": {
+        "column": 64,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace * with / in Header::parse\n@@ -16,17 +16,17 @@\n impl Header {\n     pub fn parse(index: &[u8]) -> Result<Header, Error> {\n         let head = index\n             .get(..HEADER_LEN)\n             .ok_or(Error::BadIndex(\"index shorter than header\"))?;\n         if &head[..4] != XDIC_MAGIC {\n             return Err(Error::BadIndex(\"bad xdic magic\"));\n         }\n-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());\n+        let word = |i: usize| u32::from_le_bytes(head[i * 4..i / /* ~ changed by cargo-mutants ~ */ 4 + 4].try_into().unwrap());\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::parse",
+      "return_type": "-> Result<Header, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 29
+        },
+        "start": {
+          "column": 5,
+          "line": 17
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:24:64: replace * with / in Header::parse",
+    "package": "gputrace-bundle",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 65,
+        "line": 24
+      },
+      "start": {
+        "column": 64,
+        "line": 24
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Header::record_array_offset -> Result<usize, Error> with Ok(0)\n@@ -25,20 +25,17 @@\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n-        (self.bucket_count as usize)\n-            .checked_mul(BUCKET_SIZE)\n-            .and_then(|b| b.checked_add(HEADER_LEN))\n-            .ok_or(Error::BadIndex(\"record array offset overflow\"))\n+        Ok(0) /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n pub(crate) struct Record {\n     pub usize_len: u32,\n     pub csize: u32,\n     pub store0_offset: u64,\n }\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::record_array_offset",
+      "return_type": "-> Result<usize, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 37
+        },
+        "start": {
+          "column": 5,
+          "line": 31
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:33:9: replace Header::record_array_offset -> Result<usize, Error> with Ok(0)",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(0)",
+    "span": {
+      "end": {
+        "column": 68,
+        "line": 36
+      },
+      "start": {
+        "column": 9,
+        "line": 33
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Header::record_array_offset -> Result<usize, Error> with Ok(1)\n@@ -25,20 +25,17 @@\n         Ok(Header {\n             bucket_count: word(2),\n             record_count: word(3),\n         })\n     }\n \n     /// The record array begins after the header and the bucket table.\n     pub fn record_array_offset(&self) -> Result<usize, Error> {\n-        (self.bucket_count as usize)\n-            .checked_mul(BUCKET_SIZE)\n-            .and_then(|b| b.checked_add(HEADER_LEN))\n-            .ok_or(Error::BadIndex(\"record array offset overflow\"))\n+        Ok(1) /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n pub(crate) struct Record {\n     pub usize_len: u32,\n     pub csize: u32,\n     pub store0_offset: u64,\n }\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Header::record_array_offset",
+      "return_type": "-> Result<usize, Error>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 37
+        },
+        "start": {
+          "column": 5,
+          "line": 31
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:33:9: replace Header::record_array_offset -> Result<usize, Error> with Ok(1)",
+    "package": "gputrace-bundle",
+    "replacement": "Ok(1)",
+    "span": {
+      "end": {
+        "column": 68,
+        "line": 36
+      },
+      "start": {
+        "column": 9,
+        "line": 33
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Record::parse_at -> Option<Record> with None\n@@ -40,22 +40,17 @@\n pub(crate) struct Record {\n     pub usize_len: u32,\n     pub csize: u32,\n     pub store0_offset: u64,\n }\n \n impl Record {\n     pub fn parse_at(index: &[u8], off: usize) -> Option<Record> {\n-        let b = index.get(off..off.checked_add(RECORD_SIZE)?)?;\n-        Some(Record {\n-            usize_len: u32::from_le_bytes(b[0..4].try_into().unwrap()),\n-            csize: u32::from_le_bytes(b[4..8].try_into().unwrap()),\n-            store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n-        })\n+        None /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n         self.store0_offset == 0 && self.csize as usize == id\n     }\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::parse_at",
+      "return_type": "-> Option<Record>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 54
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:48:9: replace Record::parse_at -> Option<Record> with None",
+    "package": "gputrace-bundle",
+    "replacement": "None",
+    "span": {
+      "end": {
+        "column": 11,
+        "line": 53
+      },
+      "start": {
+        "column": 9,
+        "line": 48
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Record::parse_at -> Option<Record> with Some(Default::default())\n@@ -40,22 +40,17 @@\n pub(crate) struct Record {\n     pub usize_len: u32,\n     pub csize: u32,\n     pub store0_offset: u64,\n }\n \n impl Record {\n     pub fn parse_at(index: &[u8], off: usize) -> Option<Record> {\n-        let b = index.get(off..off.checked_add(RECORD_SIZE)?)?;\n-        Some(Record {\n-            usize_len: u32::from_le_bytes(b[0..4].try_into().unwrap()),\n-            csize: u32::from_le_bytes(b[4..8].try_into().unwrap()),\n-            store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n-        })\n+        Some(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n         self.store0_offset == 0 && self.csize as usize == id\n     }\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::parse_at",
+      "return_type": "-> Option<Record>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 54
+        },
+        "start": {
+          "column": 5,
+          "line": 47
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:48:9: replace Record::parse_at -> Option<Record> with Some(Default::default())",
+    "package": "gputrace-bundle",
+    "replacement": "Some(Default::default())",
+    "span": {
+      "end": {
+        "column": 11,
+        "line": 53
+      },
+      "start": {
+        "column": 9,
+        "line": 48
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Record::is_alias -> bool with true\n@@ -52,17 +52,17 @@\n             store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n         })\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n-        self.store0_offset == 0 && self.csize as usize == id\n+        true /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// Open-addressed hash table mapping each record to the record that actually\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::is_alias",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 56
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:60:9: replace Record::is_alias -> bool with true",
+    "package": "gputrace-bundle",
+    "replacement": "true",
+    "span": {
+      "end": {
+        "column": 61,
+        "line": 60
+      },
+      "start": {
+        "column": 9,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Record::is_alias -> bool with false\n@@ -52,17 +52,17 @@\n             store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n         })\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n-        self.store0_offset == 0 && self.csize as usize == id\n+        false /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n /// Open-addressed hash table mapping each record to the record that actually\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::is_alias",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 56
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:60:9: replace Record::is_alias -> bool with false",
+    "package": "gputrace-bundle",
+    "replacement": "false",
+    "span": {
+      "end": {
+        "column": 61,
+        "line": 60
+      },
+      "start": {
+        "column": 9,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace && with || in Record::is_alias\n@@ -52,17 +52,17 @@\n             store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n         })\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n-        self.store0_offset == 0 && self.csize as usize == id\n+        self.store0_offset == 0 || /* ~ changed by cargo-mutants ~ */ self.csize as usize == id\n     }\n }\n \n /// Open-addressed hash table mapping each record to the record that actually\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::is_alias",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 56
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:60:33: replace && with || in Record::is_alias",
+    "package": "gputrace-bundle",
+    "replacement": "||",
+    "span": {
+      "end": {
+        "column": 35,
+        "line": 60
+      },
+      "start": {
+        "column": 33,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace == with != in Record::is_alias\n@@ -52,17 +52,17 @@\n             store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n         })\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n-        self.store0_offset == 0 && self.csize as usize == id\n+        self.store0_offset != /* ~ changed by cargo-mutants ~ */ 0 && self.csize as usize == id\n     }\n }\n \n /// Open-addressed hash table mapping each record to the record that actually\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::is_alias",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 56
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:60:28: replace == with != in Record::is_alias",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 30,
+        "line": 60
+      },
+      "start": {
+        "column": 28,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace == with != in Record::is_alias\n@@ -52,17 +52,17 @@\n             store0_offset: u64::from_le_bytes(b[8..16].try_into().unwrap()),\n         })\n     }\n \n     /// An alias carries a marker where an extent would be: `store0_offset == 0`\n     /// and `csize == this record's own index`. Its bytes live in a canonical\n     /// record reached via the bucket table.\n     pub fn is_alias(&self, id: usize) -> bool {\n-        self.store0_offset == 0 && self.csize as usize == id\n+        self.store0_offset == 0 && self.csize as usize != /* ~ changed by cargo-mutants ~ */ id\n     }\n }\n \n /// Open-addressed hash table mapping each record to the record that actually\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Record::is_alias",
+      "return_type": "-> bool",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 61
+        },
+        "start": {
+          "column": 5,
+          "line": 56
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:60:56: replace == with != in Record::is_alias",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 58,
+        "line": 60
+      },
+      "start": {
+        "column": 56,
+        "line": 60
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Buckets::build -> Option<Buckets> with None\n@@ -65,39 +65,17 @@\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n }\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n-        let n = header.record_count as usize;\n-        let mut canonical: Vec<u32> = (0..header.record_count).collect();\n-        let mut seen = vec![false; n];\n-        for k in 0..header.bucket_count as usize {\n-            let at = HEADER_LEN + k * BUCKET_SIZE;\n-            let b = index.get(at..at + BUCKET_SIZE)?;\n-            let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n-            let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n-            let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n-                continue;\n-            }\n-            if third != EMPTY {\n-                return None; // occupied buckets always carry the 0xFFFFFFFF marker\n-            }\n-            let (ti, ci) = (this as usize, canon as usize);\n-            if ti >= n || ci >= n || seen[ti] {\n-                return None; // out of range, or two buckets claim one record\n-            }\n-            seen[ti] = true;\n-            canonical[ti] = canon;\n-        }\n-        Some(Buckets { canonical })\n+        None /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// The record holding `id`'s bytes (itself when not aliased).\n     pub fn canonical(&self, id: usize) -> usize {\n         self.canonical.get(id).map(|&c| c as usize).unwrap_or(id)\n     }\n }\n \n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:73:9: replace Buckets::build -> Option<Buckets> with None",
+    "package": "gputrace-bundle",
+    "replacement": "None",
+    "span": {
+      "end": {
+        "column": 36,
+        "line": 95
+      },
+      "start": {
+        "column": 9,
+        "line": 73
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Buckets::build -> Option<Buckets> with Some(Default::default())\n@@ -65,39 +65,17 @@\n /// holds its bytes. Absent (`None`) when the table fails validation, in which\n /// case every non-alias record is still usable.\n pub(crate) struct Buckets {\n     canonical: Vec<u32>,\n }\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n-        let n = header.record_count as usize;\n-        let mut canonical: Vec<u32> = (0..header.record_count).collect();\n-        let mut seen = vec![false; n];\n-        for k in 0..header.bucket_count as usize {\n-            let at = HEADER_LEN + k * BUCKET_SIZE;\n-            let b = index.get(at..at + BUCKET_SIZE)?;\n-            let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n-            let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n-            let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n-                continue;\n-            }\n-            if third != EMPTY {\n-                return None; // occupied buckets always carry the 0xFFFFFFFF marker\n-            }\n-            let (ti, ci) = (this as usize, canon as usize);\n-            if ti >= n || ci >= n || seen[ti] {\n-                return None; // out of range, or two buckets claim one record\n-            }\n-            seen[ti] = true;\n-            canonical[ti] = canon;\n-        }\n-        Some(Buckets { canonical })\n+        Some(Default::default()) /* ~ changed by cargo-mutants ~ */\n     }\n \n     /// The record holding `id`'s bytes (itself when not aliased).\n     pub fn canonical(&self, id: usize) -> usize {\n         self.canonical.get(id).map(|&c| c as usize).unwrap_or(id)\n     }\n }\n \n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:73:9: replace Buckets::build -> Option<Buckets> with Some(Default::default())",
+    "package": "gputrace-bundle",
+    "replacement": "Some(Default::default())",
+    "span": {
+      "end": {
+        "column": 36,
+        "line": 95
+      },
+      "start": {
+        "column": 9,
+        "line": 73
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace + with - in Buckets::build\n@@ -69,17 +69,17 @@\n }\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n         let n = header.record_count as usize;\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n-            let at = HEADER_LEN + k * BUCKET_SIZE;\n+            let at = HEADER_LEN - /* ~ changed by cargo-mutants ~ */ k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:77:33: replace + with - in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "-",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 77
+      },
+      "start": {
+        "column": 33,
+        "line": 77
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace + with * in Buckets::build\n@@ -69,17 +69,17 @@\n }\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n         let n = header.record_count as usize;\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n-            let at = HEADER_LEN + k * BUCKET_SIZE;\n+            let at = HEADER_LEN * /* ~ changed by cargo-mutants ~ */ k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:77:33: replace + with * in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 34,
+        "line": 77
+      },
+      "start": {
+        "column": 33,
+        "line": 77
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace * with + in Buckets::build\n@@ -69,17 +69,17 @@\n }\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n         let n = header.record_count as usize;\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n-            let at = HEADER_LEN + k * BUCKET_SIZE;\n+            let at = HEADER_LEN + k + /* ~ changed by cargo-mutants ~ */ BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:77:37: replace * with + in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "+",
+    "span": {
+      "end": {
+        "column": 38,
+        "line": 77
+      },
+      "start": {
+        "column": 37,
+        "line": 77
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace * with / in Buckets::build\n@@ -69,17 +69,17 @@\n }\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n         let n = header.record_count as usize;\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n-            let at = HEADER_LEN + k * BUCKET_SIZE;\n+            let at = HEADER_LEN + k / /* ~ changed by cargo-mutants ~ */ BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:77:37: replace * with / in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "/",
+    "span": {
+      "end": {
+        "column": 38,
+        "line": 77
+      },
+      "start": {
+        "column": 37,
+        "line": 77
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace + with - in Buckets::build\n@@ -70,17 +70,17 @@\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n         let n = header.record_count as usize;\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n-            let b = index.get(at..at + BUCKET_SIZE)?;\n+            let b = index.get(at..at - /* ~ changed by cargo-mutants ~ */ BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:78:38: replace + with - in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "-",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 78
+      },
+      "start": {
+        "column": 38,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace + with * in Buckets::build\n@@ -70,17 +70,17 @@\n \n impl Buckets {\n     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {\n         let n = header.record_count as usize;\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n-            let b = index.get(at..at + BUCKET_SIZE)?;\n+            let b = index.get(at..at * /* ~ changed by cargo-mutants ~ */ BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:78:38: replace + with * in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "*",
+    "span": {
+      "end": {
+        "column": 39,
+        "line": 78
+      },
+      "start": {
+        "column": 38,
+        "line": 78
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace && with || in Buckets::build\n@@ -74,17 +74,17 @@\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n+            if canon == EMPTY && this == EMPTY || /* ~ changed by cargo-mutants ~ */ third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n             if ti >= n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:82:48: replace && with || in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "||",
+    "span": {
+      "end": {
+        "column": 50,
+        "line": 82
+      },
+      "start": {
+        "column": 48,
+        "line": 82
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace && with || in Buckets::build\n@@ -74,17 +74,17 @@\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n+            if canon == EMPTY || /* ~ changed by cargo-mutants ~ */ this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n             if ti >= n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:82:31: replace && with || in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "||",
+    "span": {
+      "end": {
+        "column": 33,
+        "line": 82
+      },
+      "start": {
+        "column": 31,
+        "line": 82
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace == with != in Buckets::build\n@@ -74,17 +74,17 @@\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n+            if canon != /* ~ changed by cargo-mutants ~ */ EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n             if ti >= n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:82:22: replace == with != in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 24,
+        "line": 82
+      },
+      "start": {
+        "column": 22,
+        "line": 82
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace == with != in Buckets::build\n@@ -74,17 +74,17 @@\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n+            if canon == EMPTY && this != /* ~ changed by cargo-mutants ~ */ EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n             if ti >= n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:82:39: replace == with != in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 41,
+        "line": 82
+      },
+      "start": {
+        "column": 39,
+        "line": 82
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace == with != in Buckets::build\n@@ -74,17 +74,17 @@\n         let mut canonical: Vec<u32> = (0..header.record_count).collect();\n         let mut seen = vec![false; n];\n         for k in 0..header.bucket_count as usize {\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n-            if canon == EMPTY && this == EMPTY && third == EMPTY {\n+            if canon == EMPTY && this == EMPTY && third != /* ~ changed by cargo-mutants ~ */ EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n             if ti >= n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:82:57: replace == with != in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "!=",
+    "span": {
+      "end": {
+        "column": 59,
+        "line": 82
+      },
+      "start": {
+        "column": 57,
+        "line": 82
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace != with == in Buckets::build\n@@ -77,17 +77,17 @@\n             let at = HEADER_LEN + k * BUCKET_SIZE;\n             let b = index.get(at..at + BUCKET_SIZE)?;\n             let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());\n             let this = u32::from_le_bytes(b[4..8].try_into().unwrap());\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n-            if third != EMPTY {\n+            if third == /* ~ changed by cargo-mutants ~ */ EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n             if ti >= n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n             }\n             seen[ti] = true;\n             canonical[ti] = canon;\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:85:22: replace != with == in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "==",
+    "span": {
+      "end": {
+        "column": 24,
+        "line": 85
+      },
+      "start": {
+        "column": 22,
+        "line": 85
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace || with && in Buckets::build\n@@ -81,17 +81,17 @@\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n-            if ti >= n || ci >= n || seen[ti] {\n+            if ti >= n || ci >= n && /* ~ changed by cargo-mutants ~ */ seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n             }\n             seen[ti] = true;\n             canonical[ti] = canon;\n         }\n         Some(Buckets { canonical })\n     }\n \n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:89:35: replace || with && in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "&&",
+    "span": {
+      "end": {
+        "column": 37,
+        "line": 89
+      },
+      "start": {
+        "column": 35,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace || with && in Buckets::build\n@@ -81,17 +81,17 @@\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n-            if ti >= n || ci >= n || seen[ti] {\n+            if ti >= n && /* ~ changed by cargo-mutants ~ */ ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n             }\n             seen[ti] = true;\n             canonical[ti] = canon;\n         }\n         Some(Buckets { canonical })\n     }\n \n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:89:24: replace || with && in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "&&",
+    "span": {
+      "end": {
+        "column": 26,
+        "line": 89
+      },
+      "start": {
+        "column": 24,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace >= with < in Buckets::build\n@@ -81,17 +81,17 @@\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n-            if ti >= n || ci >= n || seen[ti] {\n+            if ti < /* ~ changed by cargo-mutants ~ */ n || ci >= n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n             }\n             seen[ti] = true;\n             canonical[ti] = canon;\n         }\n         Some(Buckets { canonical })\n     }\n \n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:89:19: replace >= with < in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 21,
+        "line": 89
+      },
+      "start": {
+        "column": 19,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace >= with < in Buckets::build\n@@ -81,17 +81,17 @@\n             let third = u32::from_le_bytes(b[8..12].try_into().unwrap());\n             if canon == EMPTY && this == EMPTY && third == EMPTY {\n                 continue;\n             }\n             if third != EMPTY {\n                 return None; // occupied buckets always carry the 0xFFFFFFFF marker\n             }\n             let (ti, ci) = (this as usize, canon as usize);\n-            if ti >= n || ci >= n || seen[ti] {\n+            if ti >= n || ci < /* ~ changed by cargo-mutants ~ */ n || seen[ti] {\n                 return None; // out of range, or two buckets claim one record\n             }\n             seen[ti] = true;\n             canonical[ti] = canon;\n         }\n         Some(Buckets { canonical })\n     }\n \n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::build",
+      "return_type": "-> Option<Buckets>",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 96
+        },
+        "start": {
+          "column": 5,
+          "line": 72
+        }
+      }
+    },
+    "genre": "BinaryOperator",
+    "name": "src/index.rs:89:30: replace >= with < in Buckets::build",
+    "package": "gputrace-bundle",
+    "replacement": "<",
+    "span": {
+      "end": {
+        "column": 32,
+        "line": 89
+      },
+      "start": {
+        "column": 30,
+        "line": 89
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Buckets::canonical -> usize with 0\n@@ -92,17 +92,17 @@\n             seen[ti] = true;\n             canonical[ti] = canon;\n         }\n         Some(Buckets { canonical })\n     }\n \n     /// The record holding `id`'s bytes (itself when not aliased).\n     pub fn canonical(&self, id: usize) -> usize {\n-        self.canonical.get(id).map(|&c| c as usize).unwrap_or(id)\n+        0 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     // Header: xdic magic, then u32 words. word2 = bucket count, word3 = record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::canonical",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 101
+        },
+        "start": {
+          "column": 5,
+          "line": 98
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:100:9: replace Buckets::canonical -> usize with 0",
+    "package": "gputrace-bundle",
+    "replacement": "0",
+    "span": {
+      "end": {
+        "column": 66,
+        "line": 100
+      },
+      "start": {
+        "column": 9,
+        "line": 100
+      }
+    }
+  },
+  {
+    "diff": "--- src/index.rs\n+++ replace Buckets::canonical -> usize with 1\n@@ -92,17 +92,17 @@\n             seen[ti] = true;\n             canonical[ti] = canon;\n         }\n         Some(Buckets { canonical })\n     }\n \n     /// The record holding `id`'s bytes (itself when not aliased).\n     pub fn canonical(&self, id: usize) -> usize {\n-        self.canonical.get(id).map(|&c| c as usize).unwrap_or(id)\n+        1 /* ~ changed by cargo-mutants ~ */\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::*;\n \n     // Header: xdic magic, then u32 words. word2 = bucket count, word3 = record\n",
+    "file": "src/index.rs",
+    "function": {
+      "function_name": "Buckets::canonical",
+      "return_type": "-> usize",
+      "span": {
+        "end": {
+          "column": 6,
+          "line": 101
+        },
+        "start": {
+          "column": 5,
+          "line": 98
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/index.rs:100:9: replace Buckets::canonical -> usize with 1",
+    "package": "gputrace-bundle",
+    "replacement": "1",
+    "span": {
+      "end": {
+        "column": 66,
+        "line": 100
+      },
+      "start": {
+        "column": 9,
+        "line": 100
+      }
+    }
+  },
+  {
+    "diff": "--- src/store.rs\n+++ replace read_extent -> Option<Vec<u8>> with None\n@@ -8,29 +8,17 @@\n /// must decompress to exactly `usize_len` bytes. Returns `None` on any\n /// bounds/inflate/size failure (the caller skips such a record).\n pub(crate) fn read_extent(\n     store0: &[u8],\n     offset: u64,\n     csize: u32,\n     usize_len: u32,\n ) -> Option<Vec<u8>> {\n-    let start = usize::try_from(offset).ok()?;\n-    let end = start.checked_add(csize as usize)?;\n-    let extent = store0.get(start..end)?;\n-    let mut dec = ZlibDecoder::new(extent);\n-    let mut out = vec![0u8; usize_len as usize];\n-    dec.read_exact(&mut out).ok()?;\n-    // The stream must end exactly here: a further byte would mean it inflated\n-    // past the declared size (or ran into a following stream).\n-    let mut extra = [0u8; 1];\n-    match dec.read(&mut extra) {\n-        Ok(0) => Some(out),\n-        _ => None,\n-    }\n+    None /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::read_extent;\n     use flate2::{Compression, write::ZlibEncoder};\n     use std::io::Write;\n \n",
+    "file": "src/store.rs",
+    "function": {
+      "function_name": "read_extent",
+      "return_type": "-> Option<Vec<u8>>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 29
+        },
+        "start": {
+          "column": 1,
+          "line": 7
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with None",
+    "package": "gputrace-bundle",
+    "replacement": "None",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 28
+      },
+      "start": {
+        "column": 5,
+        "line": 16
+      }
+    }
+  },
+  {
+    "diff": "--- src/store.rs\n+++ replace read_extent -> Option<Vec<u8>> with Some(vec![])\n@@ -8,29 +8,17 @@\n /// must decompress to exactly `usize_len` bytes. Returns `None` on any\n /// bounds/inflate/size failure (the caller skips such a record).\n pub(crate) fn read_extent(\n     store0: &[u8],\n     offset: u64,\n     csize: u32,\n     usize_len: u32,\n ) -> Option<Vec<u8>> {\n-    let start = usize::try_from(offset).ok()?;\n-    let end = start.checked_add(csize as usize)?;\n-    let extent = store0.get(start..end)?;\n-    let mut dec = ZlibDecoder::new(extent);\n-    let mut out = vec![0u8; usize_len as usize];\n-    dec.read_exact(&mut out).ok()?;\n-    // The stream must end exactly here: a further byte would mean it inflated\n-    // past the declared size (or ran into a following stream).\n-    let mut extra = [0u8; 1];\n-    match dec.read(&mut extra) {\n-        Ok(0) => Some(out),\n-        _ => None,\n-    }\n+    Some(vec![]) /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::read_extent;\n     use flate2::{Compression, write::ZlibEncoder};\n     use std::io::Write;\n \n",
+    "file": "src/store.rs",
+    "function": {
+      "function_name": "read_extent",
+      "return_type": "-> Option<Vec<u8>>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 29
+        },
+        "start": {
+          "column": 1,
+          "line": 7
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with Some(vec![])",
+    "package": "gputrace-bundle",
+    "replacement": "Some(vec![])",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 28
+      },
+      "start": {
+        "column": 5,
+        "line": 16
+      }
+    }
+  },
+  {
+    "diff": "--- src/store.rs\n+++ replace read_extent -> Option<Vec<u8>> with Some(vec![0])\n@@ -8,29 +8,17 @@\n /// must decompress to exactly `usize_len` bytes. Returns `None` on any\n /// bounds/inflate/size failure (the caller skips such a record).\n pub(crate) fn read_extent(\n     store0: &[u8],\n     offset: u64,\n     csize: u32,\n     usize_len: u32,\n ) -> Option<Vec<u8>> {\n-    let start = usize::try_from(offset).ok()?;\n-    let end = start.checked_add(csize as usize)?;\n-    let extent = store0.get(start..end)?;\n-    let mut dec = ZlibDecoder::new(extent);\n-    let mut out = vec![0u8; usize_len as usize];\n-    dec.read_exact(&mut out).ok()?;\n-    // The stream must end exactly here: a further byte would mean it inflated\n-    // past the declared size (or ran into a following stream).\n-    let mut extra = [0u8; 1];\n-    match dec.read(&mut extra) {\n-        Ok(0) => Some(out),\n-        _ => None,\n-    }\n+    Some(vec![0]) /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::read_extent;\n     use flate2::{Compression, write::ZlibEncoder};\n     use std::io::Write;\n \n",
+    "file": "src/store.rs",
+    "function": {
+      "function_name": "read_extent",
+      "return_type": "-> Option<Vec<u8>>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 29
+        },
+        "start": {
+          "column": 1,
+          "line": 7
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with Some(vec![0])",
+    "package": "gputrace-bundle",
+    "replacement": "Some(vec![0])",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 28
+      },
+      "start": {
+        "column": 5,
+        "line": 16
+      }
+    }
+  },
+  {
+    "diff": "--- src/store.rs\n+++ replace read_extent -> Option<Vec<u8>> with Some(vec![1])\n@@ -8,29 +8,17 @@\n /// must decompress to exactly `usize_len` bytes. Returns `None` on any\n /// bounds/inflate/size failure (the caller skips such a record).\n pub(crate) fn read_extent(\n     store0: &[u8],\n     offset: u64,\n     csize: u32,\n     usize_len: u32,\n ) -> Option<Vec<u8>> {\n-    let start = usize::try_from(offset).ok()?;\n-    let end = start.checked_add(csize as usize)?;\n-    let extent = store0.get(start..end)?;\n-    let mut dec = ZlibDecoder::new(extent);\n-    let mut out = vec![0u8; usize_len as usize];\n-    dec.read_exact(&mut out).ok()?;\n-    // The stream must end exactly here: a further byte would mean it inflated\n-    // past the declared size (or ran into a following stream).\n-    let mut extra = [0u8; 1];\n-    match dec.read(&mut extra) {\n-        Ok(0) => Some(out),\n-        _ => None,\n-    }\n+    Some(vec![1]) /* ~ changed by cargo-mutants ~ */\n }\n \n #[cfg(test)]\n mod tests {\n     use super::read_extent;\n     use flate2::{Compression, write::ZlibEncoder};\n     use std::io::Write;\n \n",
+    "file": "src/store.rs",
+    "function": {
+      "function_name": "read_extent",
+      "return_type": "-> Option<Vec<u8>>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 29
+        },
+        "start": {
+          "column": 1,
+          "line": 7
+        }
+      }
+    },
+    "genre": "FnValue",
+    "name": "src/store.rs:16:5: replace read_extent -> Option<Vec<u8>> with Some(vec![1])",
+    "package": "gputrace-bundle",
+    "replacement": "Some(vec![1])",
+    "span": {
+      "end": {
+        "column": 6,
+        "line": 28
+      },
+      "start": {
+        "column": 5,
+        "line": 16
+      }
+    }
+  },
+  {
+    "diff": "--- src/store.rs\n+++ delete match arm Ok(0) in read_extent\n@@ -18,17 +18,17 @@\n     let extent = store0.get(start..end)?;\n     let mut dec = ZlibDecoder::new(extent);\n     let mut out = vec![0u8; usize_len as usize];\n     dec.read_exact(&mut out).ok()?;\n     // The stream must end exactly here: a further byte would mean it inflated\n     // past the declared size (or ran into a following stream).\n     let mut extra = [0u8; 1];\n     match dec.read(&mut extra) {\n-        Ok(0) => Some(out),\n+         /* ~ changed by cargo-mutants ~ */\n         _ => None,\n     }\n }\n \n #[cfg(test)]\n mod tests {\n     use super::read_extent;\n     use flate2::{Compression, write::ZlibEncoder};\n",
+    "file": "src/store.rs",
+    "function": {
+      "function_name": "read_extent",
+      "return_type": "-> Option<Vec<u8>>",
+      "span": {
+        "end": {
+          "column": 2,
+          "line": 29
+        },
+        "start": {
+          "column": 1,
+          "line": 7
+        }
+      }
+    },
+    "genre": "MatchArm",
+    "name": "src/store.rs:26:9: delete match arm Ok(0) in read_extent",
+    "package": "gputrace-bundle",
+    "replacement": "",
+    "span": {
+      "end": {
+        "column": 28,
+        "line": 26
+      },
+      "start": {
+        "column": 9,
+        "line": 26
+      }
+    }
+  }
+]

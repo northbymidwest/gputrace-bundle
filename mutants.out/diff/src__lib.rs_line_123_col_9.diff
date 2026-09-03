@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(Vec::new())
+@@ -115,17 +115,17 @@
+             .unwrap_or("trace")
+             .to_string();
+         Ok(Bundle { name, textures })
+     }
+ 
+     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge
+     /// order that corresponds rank-for-rank with ascending fetch streamRefs).
+     pub fn textures(&self) -> &[TextureDescriptor] {
+-        &self.textures
++        Vec::leak(Vec::new()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     pub fn texture_count(&self) -> usize {
+         self.textures.len()
+     }
+ 
+     pub fn name(&self) -> &str {
+         &self.name

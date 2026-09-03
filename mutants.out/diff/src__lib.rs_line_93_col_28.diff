@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ replace == with != in Bundle::open
+@@ -85,17 +85,17 @@
+                 // canonical must hold real bytes, and be a 248-byte descriptor
+                 // itself - otherwise an alias could redirect to a record with
+                 // an arbitrary `usize_len`, forcing a huge transient
+                 // allocation in `store::read_extent`.
+                 Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,
+                 _ => continue,
+             };
+             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)
+-                && p.len() == DESC_SIZE
++                && p.len() != /* ~ changed by cargo-mutants ~ */ DESC_SIZE
+             {
+                 payloads.push((cr.store0_offset, p));
+             }
+         }
+ 
+         let tag = derive_tag(
+             &payloads
+                 .iter()

@@ -1,0 +1,27 @@
+--- src/descriptor.rs
++++ replace derive_tag -> Option<u64> with None
+@@ -51,23 +51,17 @@
+         usage: word(payload, 11),
+         texture_id: word(payload, 17),
+     }
+ }
+ 
+ /// The capture's descriptor tag: the most common word-0 value among the
+ /// 248-byte payloads. `None` when there are none.
+ pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {
+-    let mut votes: HashMap<u64, usize> = HashMap::new();
+-    for &w in word0s {
+-        *votes.entry(w).or_default() += 1;
+-    }
+-    // Ties are broken by the tag value (the larger wins), so the result is
+-    // deterministic rather than dependent on HashMap iteration order.
+-    votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)
++    None /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+ 
+     // Build a synthetic 248-byte descriptor: 31 LE u64 words, tag at word 0.
+     fn desc(tag: u64, fields: &[(usize, u64)]) -> Vec<u8> {

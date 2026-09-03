@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ replace * with + in Bundle::open
+@@ -61,17 +61,17 @@
+             .checked_mul(RECORD_SIZE)
+             .and_then(|len| rec_off.checked_add(len))
+             .ok_or(Error::BadIndex("record array exceeds index size"))?;
+         if record_array_len > index.len() {
+             return Err(Error::BadIndex("record array exceeds index size"));
+         }
+         let mut records = Vec::with_capacity(header.record_count as usize);
+         for i in 0..header.record_count as usize {
+-            let r = Record::parse_at(&index, rec_off + i * RECORD_SIZE)
++            let r = Record::parse_at(&index, rec_off + i + /* ~ changed by cargo-mutants ~ */ RECORD_SIZE)
+                 .ok_or(Error::BadIndex("record array truncated"))?;
+             records.push(r);
+         }
+         let buckets = Buckets::build(&index, &header);
+         let canonical = |id: usize| buckets.as_ref().map(|b| b.canonical(id)).unwrap_or(id);
+ 
+         // Collect every 248-byte record's payload (alias-resolved), with the
+         // canonical record's store0 offset.

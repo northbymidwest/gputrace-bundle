@@ -1,0 +1,21 @@
+--- src/descriptor.rs
++++ replace + with * in word
+@@ -22,17 +22,17 @@
+     pub usage: u64,
+     pub texture_id: u64,
+ }
+ 
+ /// Read word `i` (little-endian u64) of a descriptor payload, 0 if out of range.
+ fn word(payload: &[u8], i: usize) -> u64 {
+     let o = i * 8;
+     payload
+-        .get(o..o + 8)
++        .get(o..o * /* ~ changed by cargo-mutants ~ */ 8)
+         .map(|b| u64::from_le_bytes(b.try_into().unwrap()))
+         .unwrap_or(0)
+ }
+ 
+ /// Word 0: the per-capture descriptor tag shared by every descriptor struct.
+ pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {
+     word(payload, 0)
+ }

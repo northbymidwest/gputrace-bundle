@@ -1,0 +1,21 @@
+--- src/lib.rs
++++ replace == with != in Bundle::open
+@@ -99,17 +99,17 @@
+         let tag = derive_tag(
+             &payloads
+                 .iter()
+                 .map(|(_, p)| descriptor_tag(p))
+                 .collect::<Vec<_>>(),
+         );
+         let mut textures: Vec<TextureDescriptor> = payloads
+             .iter()
+-            .filter(|(_, p)| Some(descriptor_tag(p)) == tag)
++            .filter(|(_, p)| Some(descriptor_tag(p)) != /* ~ changed by cargo-mutants ~ */ tag)
+             .map(|(off, p)| parse_descriptor(p, *off))
+             .collect();
+         textures.sort_by_key(|d| d.store0_offset);
+ 
+         let name = path
+             .file_stem()
+             .and_then(|s| s.to_str())
+             .unwrap_or("trace")

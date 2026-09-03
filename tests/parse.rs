@@ -165,3 +165,94 @@ fn oversized_record_count_against_short_index_is_rejected() {
     let err = gputrace_bundle::Bundle::open(&dir).unwrap_err();
     assert!(matches!(err, gputrace_bundle::Error::BadIndex(_)));
 }
+
+/// Trailing bytes after the record array (index padding) must be tolerated:
+/// the record array occupying LESS than the whole index is normal; only
+/// claiming MORE than the index holds is the error.
+#[test]
+fn trailing_bytes_after_the_record_array_are_tolerated() {
+    let tmp = std::env::temp_dir().join(format!("bundle_parse_trailing_{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    let dir = tmp.join("synthetic.gputrace");
+    std::fs::create_dir_all(&dir).unwrap();
+
+    let d = desc(0xE1, &[(2, 80), (3, 64), (4, 64), (6, 1), (7, 1)]);
+    let c = zlib(&d);
+    let store0 = c.clone(); // one stream at offset 0
+
+    let mut index = Vec::new();
+    index.extend_from_slice(b"xdic");
+    index.extend_from_slice(&0u32.to_le_bytes());
+    index.extend_from_slice(&0u32.to_le_bytes()); // bucket_count = 0
+    index.extend_from_slice(&1u32.to_le_bytes()); // record_count = 1
+    index.extend_from_slice(&1u32.to_le_bytes());
+    index.extend_from_slice(&248u32.to_le_bytes()); // record 0: usize_len
+    index.extend_from_slice(&(c.len() as u32).to_le_bytes()); // csize
+    index.extend_from_slice(&0u64.to_le_bytes()); // store0_offset
+    index.extend_from_slice(&0u64.to_le_bytes()); // flags
+    // Padding beyond the record array: record_array_len < index.len().
+    index.extend_from_slice(&[0u8; 16]);
+
+    std::fs::write(dir.join("index"), &index).unwrap();
+    std::fs::write(dir.join("store0"), &store0).unwrap();
+
+    let bundle = gputrace_bundle::Bundle::open(&dir).unwrap();
+    assert_eq!(bundle.texture_count(), 1);
+}
+
+/// The parser skips a canonical record that is itself an alias marker
+/// (store0_offset 0, csize == its own id). Even when that record's csize
+/// happens to equal a real, decompressible stream's length at offset 0, an
+/// alias marker is not a payload and must not be turned into a texture.
+#[test]
+fn alias_whose_canonical_is_itself_an_alias_yields_no_texture() {
+    let tmp = std::env::temp_dir().join(format!("bundle_parse_alias2_{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&tmp);
+    let dir = tmp.join("synthetic.gputrace");
+    std::fs::create_dir_all(&dir).unwrap();
+
+    let d = desc(0xE1, &[(2, 80), (3, 64), (4, 64), (6, 1), (7, 1)]);
+    let comp = zlib(&d);
+    let l = comp.len(); // the canonical alias sits at record index `l`
+    let records = l + 1;
+
+    // store0: the real 248-byte stream at offset 0, `l` bytes long.
+    let store0 = comp.clone();
+
+    let mut index = Vec::new();
+    index.extend_from_slice(b"xdic");
+    index.extend_from_slice(&0u32.to_le_bytes());
+    index.extend_from_slice(&1u32.to_le_bytes()); // bucket_count = 1
+    index.extend_from_slice(&(records as u32).to_le_bytes());
+    index.extend_from_slice(&(records as u32).to_le_bytes());
+    // one bucket: record 1 -> canonical `l`
+    index.extend_from_slice(&(l as u32).to_le_bytes()); // canonical
+    index.extend_from_slice(&1u32.to_le_bytes()); // this = 1
+    index.extend_from_slice(&u32::MAX.to_le_bytes()); // marker
+    for i in 0..records {
+        let (usz, cs, off): (u32, u32, u64) = if i == l {
+            // canonical `l`: an alias marker (offset 0, csize == its id `l`),
+            // and csize == comp.len() so read_extent WOULD succeed if the guard
+            // let it through.
+            (248, l as u32, 0)
+        } else if i == 1 {
+            // the aliased record: 248-sized, not itself an alias.
+            (248, 5, 100)
+        } else {
+            (0, 0, 0) // filler: usize_len != 248, filtered out
+        };
+        index.extend_from_slice(&usz.to_le_bytes());
+        index.extend_from_slice(&cs.to_le_bytes());
+        index.extend_from_slice(&off.to_le_bytes());
+        index.extend_from_slice(&0u64.to_le_bytes());
+    }
+
+    std::fs::write(dir.join("index"), &index).unwrap();
+    std::fs::write(dir.join("store0"), &store0).unwrap();
+
+    // Original: record 1's canonical (l) is an alias -> skipped; record l is
+    // itself an alias -> skipped. No textures. A bypassed guard would read
+    // record l's stream and produce one.
+    let bundle = gputrace_bundle::Bundle::open(&dir).unwrap();
+    assert_eq!(bundle.texture_count(), 0);
+}

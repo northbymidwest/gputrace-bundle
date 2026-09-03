@@ -1,0 +1,21 @@
+--- src/index.rs
++++ replace * with / in Header::parse
+@@ -16,17 +16,17 @@
+ impl Header {
+     pub fn parse(index: &[u8]) -> Result<Header, Error> {
+         let head = index
+             .get(..HEADER_LEN)
+             .ok_or(Error::BadIndex("index shorter than header"))?;
+         if &head[..4] != XDIC_MAGIC {
+             return Err(Error::BadIndex("bad xdic magic"));
+         }
+-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());
++        let word = |i: usize| u32::from_le_bytes(head[i * 4..i / /* ~ changed by cargo-mutants ~ */ 4 + 4].try_into().unwrap());
+         Ok(Header {
+             bucket_count: word(2),
+             record_count: word(3),
+         })
+     }
+ 
+     /// The record array begins after the header and the bucket table.
+     pub fn record_array_offset(&self) -> Result<usize, Error> {

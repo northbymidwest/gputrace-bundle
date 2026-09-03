@@ -60,7 +60,9 @@ pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {
     for &w in word0s {
         *votes.entry(w).or_default() += 1;
     }
-    votes.into_iter().max_by_key(|&(_, n)| n).map(|(w, _)| w)
+    // Ties are broken by the tag value (the larger wins), so the result is
+    // deterministic rather than dependent on HashMap iteration order.
+    votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)
 }
 
 #[cfg(test)]
@@ -108,9 +110,16 @@ mod tests {
 
     #[test]
     fn derives_the_modal_tag() {
-        // three descriptors tagged 0xE1, one stray 0x99 -> tag is 0xE1
-        let tags = [0xE1u64, 0xE1, 0x99, 0xE1];
+        // The mode wins, not the maximum: 0xE1 has three votes and 0xFF (the
+        // larger value) only one, so the tag is 0xE1. Using a minority value
+        // LARGER than the mode is deliberate - it catches a vote that does not
+        // actually accumulate (every tag would then tie at zero and the larger
+        // value would win instead).
+        let tags = [0xE1u64, 0xE1, 0xFF, 0xE1];
         assert_eq!(derive_tag(&tags), Some(0xE1));
+        assert_eq!(derive_tag(&[7, 7, 9]), Some(7)); // mode 7 beats the larger 9
+        // A genuine tie breaks deterministically by the larger value.
+        assert_eq!(derive_tag(&[3, 8]), Some(8));
         assert_eq!(derive_tag(&[]), None);
     }
 }

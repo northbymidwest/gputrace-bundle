@@ -1,0 +1,21 @@
+--- src/descriptor.rs
++++ replace += with *= in derive_tag
+@@ -53,17 +53,17 @@
+     }
+ }
+ 
+ /// The capture's descriptor tag: the most common word-0 value among the
+ /// 248-byte payloads. `None` when there are none.
+ pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {
+     let mut votes: HashMap<u64, usize> = HashMap::new();
+     for &w in word0s {
+-        *votes.entry(w).or_default() += 1;
++        *votes.entry(w).or_default() *= /* ~ changed by cargo-mutants ~ */ 1;
+     }
+     // Ties are broken by the tag value (the larger wins), so the result is
+     // deterministic rather than dependent on HashMap iteration order.
+     votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)
+ }
+ 
+ #[cfg(test)]
+ mod tests {

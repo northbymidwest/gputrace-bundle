@@ -28,11 +28,10 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     env:
-      # Surviving mutants as of calibration (4): boundary/guard flips in
-      # Bundle::open (src/lib.rs:64, :89) and Buckets::build (src/index.rs:82)
-      # that the current tests do not pin down. Lowering is the goal (add a
-      # test that kills one, drop this); raising needs a reason in the commit.
-      BASELINE: ${{ inputs.baseline || '4' }}
+      # No surviving mutants: every mutation the tests do not catch has a test
+      # that kills it. Any survivor is a real gap - add a test, do not raise
+      # this. (Raising needs a reason in the commit that does it.)
+      BASELINE: ${{ inputs.baseline || '0' }}
       # Keep the corpus fuzz deterministic and cheap during mutation runs, so a
       # mutant's caught/survived verdict does not flicker between runs.
       FUZZ_SEED: '1'

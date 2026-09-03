@@ -1,0 +1,24 @@
+--- src/index.rs
++++ replace Header::record_array_offset -> Result<usize, Error> with Ok(1)
+@@ -25,20 +25,17 @@
+         Ok(Header {
+             bucket_count: word(2),
+             record_count: word(3),
+         })
+     }
+ 
+     /// The record array begins after the header and the bucket table.
+     pub fn record_array_offset(&self) -> Result<usize, Error> {
+-        (self.bucket_count as usize)
+-            .checked_mul(BUCKET_SIZE)
+-            .and_then(|b| b.checked_add(HEADER_LEN))
+-            .ok_or(Error::BadIndex("record array offset overflow"))
++        Ok(1) /* ~ changed by cargo-mutants ~ */
+     }
+ }
+ 
+ pub(crate) struct Record {
+     pub usize_len: u32,
+     pub csize: u32,
+     pub store0_offset: u64,
+ }

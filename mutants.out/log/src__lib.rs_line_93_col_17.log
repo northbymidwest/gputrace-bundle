@@ -1,0 +1,61 @@
+
+*** src/lib.rs:93:17: replace && with || in Bundle::open
+
+*** mutation diff:
+--- src/lib.rs
++++ replace && with || in Bundle::open
+@@ -85,17 +85,17 @@
+                 // canonical must hold real bytes, and be a 248-byte descriptor
+                 // itself - otherwise an alias could redirect to a record with
+                 // an arbitrary `usize_len`, forcing a huge transient
+                 // allocation in `store::read_extent`.
+                 Some(cr) if !cr.is_alias(cid) && cr.usize_len as usize == DESC_SIZE => cr,
+                 _ => continue,
+             };
+             if let Some(p) = store::read_extent(&store0, cr.store0_offset, cr.csize, cr.usize_len)
+-                && p.len() == DESC_SIZE
++                || /* ~ changed by cargo-mutants ~ */ p.len() == DESC_SIZE
+             {
+                 payloads.push((cr.store0_offset, p));
+             }
+         }
+ 
+         let tag = derive_tag(
+             &payloads
+                 .iter()
+
+
+*** /Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo test --no-run --verbose --package=gputrace-bundle@0.1.0
+       Fresh unicode-ident v1.0.24
+       Fresh adler2 v2.0.1
+       Fresh simd-adler32 v0.3.10
+       Fresh cfg-if v1.0.4
+       Fresh proc-macro2 v1.0.107
+       Fresh miniz_oxide v0.9.1
+       Fresh quote v1.0.47
+       Fresh crc32fast v1.5.1
+       Fresh syn v3.0.4
+       Fresh flate2 v1.1.10
+       Fresh thiserror-impl v2.0.20
+       Fresh thiserror v2.0.20
+       Dirty gputrace-bundle v0.1.0 (/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp): the file `src/lib.rs` has changed (1788471164.174512023s, 2s after last build at 1788471162.961199744s)
+   Compiling gputrace-bundle v0.1.0 (/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp)
+     Running `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1651f42ca0476b7c -C extra-filename=-9da4ac5225da4028 --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rlib --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rlib`
+     Running `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=d5da6b8e11201b0f -C extra-filename=-5d4965340fd4d5ca --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rmeta --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rmeta`
+error: `||` operators are not supported in let chain conditions
+  --> src/lib.rs:93:17
+   |
+93 |                 || /* ~ changed by cargo-mutants ~ */ p.len() == DESC_SIZE
+   |                 ^^
+
+error: could not compile `gputrace-bundle` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=d5da6b8e11201b0f -C extra-filename=-5d4965340fd4d5ca --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rmeta --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rmeta` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gputrace-bundle` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1651f42ca0476b7c -C extra-filename=-9da4ac5225da4028 --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rlib --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rlib` (exit status: 1)
+
+*** result: Failure(101)

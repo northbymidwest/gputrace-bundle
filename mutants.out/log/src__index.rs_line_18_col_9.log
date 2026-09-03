@@ -1,0 +1,90 @@
+
+*** src/index.rs:18:9: replace Header::parse -> Result<Header, Error> with Ok(Default::default())
+
+*** mutation diff:
+--- src/index.rs
++++ replace Header::parse -> Result<Header, Error> with Ok(Default::default())
+@@ -10,27 +10,17 @@
+ 
+ pub(crate) struct Header {
+     pub bucket_count: u32,
+     pub record_count: u32,
+ }
+ 
+ impl Header {
+     pub fn parse(index: &[u8]) -> Result<Header, Error> {
+-        let head = index
+-            .get(..HEADER_LEN)
+-            .ok_or(Error::BadIndex("index shorter than header"))?;
+-        if &head[..4] != XDIC_MAGIC {
+-            return Err(Error::BadIndex("bad xdic magic"));
+-        }
+-        let word = |i: usize| u32::from_le_bytes(head[i * 4..i * 4 + 4].try_into().unwrap());
+-        Ok(Header {
+-            bucket_count: word(2),
+-            record_count: word(3),
+-        })
++        Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The record array begins after the header and the bucket table.
+     pub fn record_array_offset(&self) -> Result<usize, Error> {
+         (self.bucket_count as usize)
+             .checked_mul(BUCKET_SIZE)
+             .and_then(|b| b.checked_add(HEADER_LEN))
+             .ok_or(Error::BadIndex("record array offset overflow"))
+
+
+*** /Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo test --no-run --verbose --package=gputrace-bundle@0.1.0
+       Fresh unicode-ident v1.0.24
+       Fresh cfg-if v1.0.4
+       Fresh simd-adler32 v0.3.10
+       Fresh adler2 v2.0.1
+       Fresh proc-macro2 v1.0.107
+       Fresh miniz_oxide v0.9.1
+       Fresh quote v1.0.47
+       Fresh crc32fast v1.5.1
+       Fresh syn v3.0.4
+       Fresh flate2 v1.1.10
+       Fresh thiserror-impl v2.0.20
+       Fresh thiserror v2.0.20
+       Dirty gputrace-bundle v0.1.0 (/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp): the file `src/index.rs` has changed (1788471190.008421748s, 1s after last build at 1788471189.080434621s)
+   Compiling gputrace-bundle v0.1.0 (/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp)
+     Running `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1651f42ca0476b7c -C extra-filename=-9da4ac5225da4028 --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rlib --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rlib`
+     Running `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=d5da6b8e11201b0f -C extra-filename=-5d4965340fd4d5ca --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rmeta --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rmeta`
+error[E0277]: the trait bound `Header: Default` is not satisfied
+  --> src/index.rs:18:12
+   |
+18 |         Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+   |            ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `Header`
+   |
+help: consider annotating `Header` with `#[derive(Default)]`
+   |
+11 + #[derive(Default)]
+12 | pub(crate) struct Header {
+   |
+
+error[E0277]: the trait bound `index::Header: Default` is not satisfied
+  --> src/index.rs:18:12
+   |
+18 |         Ok(Default::default()) /* ~ changed by cargo-mutants ~ */
+   |            ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `index::Header`
+   |
+help: consider annotating `index::Header` with `#[derive(Default)]`
+   |
+11 + #[derive(Default)]
+12 | pub(crate) struct Header {
+   |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `gputrace-bundle` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=d5da6b8e11201b0f -C extra-filename=-5d4965340fd4d5ca --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rmeta --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rmeta` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gputrace-bundle` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1651f42ca0476b7c -C extra-filename=-9da4ac5225da4028 --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rlib --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rlib` (exit status: 1)
+
+*** result: Failure(101)

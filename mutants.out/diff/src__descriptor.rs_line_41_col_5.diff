@@ -1,0 +1,33 @@
+--- src/descriptor.rs
++++ replace parse_descriptor -> TextureDescriptor with Default::default()
+@@ -33,29 +33,17 @@
+ }
+ 
+ /// Word 0: the per-capture descriptor tag shared by every descriptor struct.
+ pub(crate) fn descriptor_tag(payload: &[u8]) -> u64 {
+     word(payload, 0)
+ }
+ 
+ pub(crate) fn parse_descriptor(payload: &[u8], store0_offset: u64) -> TextureDescriptor {
+-    TextureDescriptor {
+-        store0_offset,
+-        texture_type: word(payload, 1) as u32,
+-        format: word(payload, 2) as u32,
+-        width: word(payload, 3) as u32,
+-        height: word(payload, 4) as u32,
+-        depth: word(payload, 5) as u32,
+-        mip_levels: word(payload, 6) as u32,
+-        array_length: word(payload, 7) as u32,
+-        sample_count: word(payload, 8) as u32,
+-        usage: word(payload, 11),
+-        texture_id: word(payload, 17),
+-    }
++    Default::default() /* ~ changed by cargo-mutants ~ */
+ }
+ 
+ /// The capture's descriptor tag: the most common word-0 value among the
+ /// 248-byte payloads. `None` when there are none.
+ pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {
+     let mut votes: HashMap<u64, usize> = HashMap::new();
+     for &w in word0s {
+         *votes.entry(w).or_default() += 1;

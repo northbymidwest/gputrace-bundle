@@ -182,4 +182,18 @@ mod tests {
         index[at + 8..at + 12].copy_from_slice(&u32::MAX.to_le_bytes());
         assert!(Buckets::build(&index, &header).is_none());
     }
+
+    #[test]
+    fn a_partially_empty_bucket_is_rejected_not_skipped() {
+        // A bucket that is neither fully empty (all three words 0xFFFFFFFF) nor
+        // a valid occupied entry - `canonical` empty but `this` set - must
+        // invalidate the table (None), not be mistaken for an empty slot and
+        // silently skipped.
+        let header = Header::parse(&header_bytes(1, 3)).unwrap();
+        let mut index = header_bytes(1, 3);
+        index.extend_from_slice(&u32::MAX.to_le_bytes()); // canonical = EMPTY
+        index.extend_from_slice(&1u32.to_le_bytes()); // this = 1 (set)
+        index.extend_from_slice(&u32::MAX.to_le_bytes()); // third = EMPTY
+        assert!(Buckets::build(&index, &header).is_none());
+    }
 }

@@ -1,0 +1,21 @@
+--- src/store.rs
++++ delete match arm Ok(0) in read_extent
+@@ -18,17 +18,17 @@
+     let extent = store0.get(start..end)?;
+     let mut dec = ZlibDecoder::new(extent);
+     let mut out = vec![0u8; usize_len as usize];
+     dec.read_exact(&mut out).ok()?;
+     // The stream must end exactly here: a further byte would mean it inflated
+     // past the declared size (or ran into a following stream).
+     let mut extra = [0u8; 1];
+     match dec.read(&mut extra) {
+-        Ok(0) => Some(out),
++         /* ~ changed by cargo-mutants ~ */
+         _ => None,
+     }
+ }
+ 
+ #[cfg(test)]
+ mod tests {
+     use super::read_extent;
+     use flate2::{Compression, write::ZlibEncoder};

@@ -1,0 +1,102 @@
+
+*** src/index.rs:73:9: replace Buckets::build -> Option<Buckets> with Some(Default::default())
+
+*** mutation diff:
+--- src/index.rs
++++ replace Buckets::build -> Option<Buckets> with Some(Default::default())
+@@ -65,39 +65,17 @@
+ /// holds its bytes. Absent (`None`) when the table fails validation, in which
+ /// case every non-alias record is still usable.
+ pub(crate) struct Buckets {
+     canonical: Vec<u32>,
+ }
+ 
+ impl Buckets {
+     pub fn build(index: &[u8], header: &Header) -> Option<Buckets> {
+-        let n = header.record_count as usize;
+-        let mut canonical: Vec<u32> = (0..header.record_count).collect();
+-        let mut seen = vec![false; n];
+-        for k in 0..header.bucket_count as usize {
+-            let at = HEADER_LEN + k * BUCKET_SIZE;
+-            let b = index.get(at..at + BUCKET_SIZE)?;
+-            let canon = u32::from_le_bytes(b[0..4].try_into().unwrap());
+-            let this = u32::from_le_bytes(b[4..8].try_into().unwrap());
+-            let third = u32::from_le_bytes(b[8..12].try_into().unwrap());
+-            if canon == EMPTY && this == EMPTY && third == EMPTY {
+-                continue;
+-            }
+-            if third != EMPTY {
+-                return None; // occupied buckets always carry the 0xFFFFFFFF marker
+-            }
+-            let (ti, ci) = (this as usize, canon as usize);
+-            if ti >= n || ci >= n || seen[ti] {
+-                return None; // out of range, or two buckets claim one record
+-            }
+-            seen[ti] = true;
+-            canonical[ti] = canon;
+-        }
+-        Some(Buckets { canonical })
++        Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+     }
+ 
+     /// The record holding `id`'s bytes (itself when not aliased).
+     pub fn canonical(&self, id: usize) -> usize {
+         self.canonical.get(id).map(|&c| c as usize).unwrap_or(id)
+     }
+ }
+ 
+
+
+*** /Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo test --no-run --verbose --package=gputrace-bundle@0.1.0
+       Fresh unicode-ident v1.0.24
+       Fresh cfg-if v1.0.4
+       Fresh adler2 v2.0.1
+       Fresh simd-adler32 v0.3.10
+       Fresh proc-macro2 v1.0.107
+       Fresh miniz_oxide v0.9.1
+       Fresh quote v1.0.47
+       Fresh crc32fast v1.5.1
+       Fresh syn v3.0.4
+       Fresh flate2 v1.1.10
+       Fresh thiserror-impl v2.0.20
+       Fresh thiserror v2.0.20
+       Dirty gputrace-bundle v0.1.0 (/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp): the file `src/index.rs` has changed (1788471206.180990678s, 1s after last build at 1788471205.246703429s)
+   Compiling gputrace-bundle v0.1.0 (/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp)
+     Running `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1651f42ca0476b7c -C extra-filename=-9da4ac5225da4028 --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rlib --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rlib`
+     Running `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=d5da6b8e11201b0f -C extra-filename=-5d4965340fd4d5ca --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rmeta --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rmeta`
+error[E0277]: the trait bound `Buckets: Default` is not satisfied
+  --> src/index.rs:73:14
+   |
+73 |         Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+   |              ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `Buckets`
+   |
+help: consider annotating `Buckets` with `#[derive(Default)]`
+   |
+67 + #[derive(Default)]
+68 | pub(crate) struct Buckets {
+   |
+
+error[E0277]: the trait bound `index::Buckets: Default` is not satisfied
+  --> src/index.rs:73:14
+   |
+73 |         Some(Default::default()) /* ~ changed by cargo-mutants ~ */
+   |              ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `index::Buckets`
+   |
+help: consider annotating `index::Buckets` with `#[derive(Default)]`
+   |
+67 + #[derive(Default)]
+68 | pub(crate) struct Buckets {
+   |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `gputrace-bundle` (lib test) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --test --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=1651f42ca0476b7c -C extra-filename=-9da4ac5225da4028 --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rlib --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rlib` (exit status: 1)
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `gputrace-bundle` (lib) due to 1 previous error
+
+Caused by:
+  process didn't exit successfully: `/Users/mike/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc --crate-name gputrace_bundle --edition=2024 src/lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked --check-cfg 'cfg(docsrs,test)' --check-cfg 'cfg(feature, values())' -C metadata=d5da6b8e11201b0f -C extra-filename=-5d4965340fd4d5ca --out-dir /private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps -C incremental=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/incremental -L dependency=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps --extern flate2=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libflate2-6ed0328aaf93bb43.rmeta --extern thiserror=/private/var/folders/r2/hsbbw3qn07g6x3fm6ksx9yqc0000gn/T/cargo-mutants-gputrace-bundle-sqWZsb.tmp/target/debug/deps/libthiserror-0c7fe80d0d5d62dd.rmeta` (exit status: 1)
+
+*** result: Failure(101)
