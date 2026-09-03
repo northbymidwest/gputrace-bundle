@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Moves the SHA-pinned action versions in the workflows.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: ci
+    labels: []
+
+  # Version updates OFF: Cargo.toml versions are minimum floors, not targets.
+  # Left enabled so a security advisory against a floor still opens a PR.
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: deps
+    open-pull-requests-limit: 0
+    labels: []

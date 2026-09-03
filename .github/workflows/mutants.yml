@@ -1,0 +1,94 @@
+name: mutants
+
+# Mutation-tests the parser: cargo-mutants injects small changes and checks the
+# suite catches them. A surviving mutant is a parser line no test observes.
+# This is a report, not a per-commit verdict.
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '43 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: 'Override the survivor baseline (to exercise the reporting path)'
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'schedule' && 'schedule' || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+
+jobs:
+  mutants:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      # Surviving mutants as of calibration (4): boundary/guard flips in
+      # Bundle::open (src/lib.rs:64, :89) and Buckets::build (src/index.rs:82)
+      # that the current tests do not pin down. Lowering is the goal (add a
+      # test that kills one, drop this); raising needs a reason in the commit.
+      BASELINE: ${{ inputs.baseline || '4' }}
+      # Keep the corpus fuzz deterministic and cheap during mutation runs, so a
+      # mutant's caught/survived verdict does not flicker between runs.
+      FUZZ_SEED: '1'
+      FUZZ_ITERS: '200'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # v1
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - uses: taiki-e/install-action@fcf5432d9f50d67e37ee6e29bdb7a224ff67b4a7 # v2.86.8
+        with:
+          tool: cargo-mutants@27.1.0
+      - id: mutate
+        env:
+          NO_COLOR: '1'
+        run: |
+          set -o pipefail
+          cargo mutants --no-shuffle 2>&1 | tee mutants.log && status=0 || status=$?
+          # exit 2 = surviving mutants found (normal); anything else is fatal.
+          if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+            echo "::error::cargo mutants exited $status"; exit "$status"
+          fi
+          missed=$(grep -c '^MISSED' mutants.log || true)
+          echo "missed=$missed" >> "$GITHUB_OUTPUT"
+          echo "surviving mutants: $missed (baseline $BASELINE)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$missed" -gt "$BASELINE" ]; then
+            echo "::error::$missed surviving mutants, above baseline $BASELINE"
+            echo "regression=true" >> "$GITHUB_OUTPUT"
+            exit 1
+          elif [ "$missed" -lt "$BASELINE" ]; then
+            echo "::notice::$missed surviving mutants, below baseline $BASELINE - lower BASELINE"
+          fi
+      - name: File a survivor regression
+        if: always() && steps.mutate.outputs.regression == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="mutants: surviving mutants above the baseline"
+          body=$(printf 'cargo-mutants found %s surviving mutants, above the baseline of %s (run %s).\n' \
+            "${{ steps.mutate.outputs.missed }}" "$BASELINE" \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")
+          existing=$(gh issue list --state open --label ci-failure --json number,title \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -1)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "$title" --label ci-failure --body "$body"
+          fi
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: mutants
+          path: |
+            mutants.log
+            mutants.out/outcomes.json
+          if-no-files-found: warn

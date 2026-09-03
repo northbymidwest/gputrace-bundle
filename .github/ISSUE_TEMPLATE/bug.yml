@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a bug in gputrace-bundle.
+labels: ["bug"]
+assignees: ["northbymidwest"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug. `gputrace-bundle` parses `.gputrace` capture
+        bundles, so a self-contained repro (ideally the smallest bundle or byte
+        sequence that triggers it) plus your exact `rustc` version is what makes
+        a bug actionable. If the issue is a parser panic or other robustness
+        problem against hostile input, you may prefer to report it privately:
+        see `.github/SECURITY.md`.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: The smallest code (and input) that reproduces it.
+      render: rust
+    validations:
+      required: true
+  - type: input
+    id: rustc
+    attributes:
+      label: rustc version
+      description: Output of `rustc -Vv`.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Crate version
+      description: The crate version or git SHA you are on.
+    validations:
+      required: true

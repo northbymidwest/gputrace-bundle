@@ -1,0 +1,10 @@
+# Spell-check allow-list for the `typos` CLI (and the CI typos check).
+#
+# Empty for now: a run of `typos` over this repo flags nothing. Entries are
+# added only as CI (or a local `typos` run) surfaces a genuine false positive,
+# such as a crate name or a deliberate spelling used as an identifier. Do not
+# add real misspellings here; fix those in the source instead.
+
+[default.extend-identifiers]
+
+[default.extend-words]

@@ -1,0 +1,17 @@
+[package]
+name = "gputrace-bundle"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "0BSD"
+repository = "https://github.com/northbymidwest/gputrace-bundle"
+description = "Session-free reader for a .gputrace bundle's texture manifest (xdic index + zlib store)."
+readme = "README.md"
+keywords = ["gputrace", "gpu", "texture", "metal", "parser"]
+categories = ["parser-implementations", "rendering::data-formats"]
+# Not published yet: flip by removing this line when cutting the first release.
+publish = false
+
+[dependencies]
+flate2 = "1"
+thiserror = "2"

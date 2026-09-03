@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+Cargo.lock.bak
+.superpowers/
+# Claude Code creates git worktrees here; a local tool artifact, not the project.
+/.claude/worktrees/

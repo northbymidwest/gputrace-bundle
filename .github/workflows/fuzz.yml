@@ -1,0 +1,70 @@
+name: fuzz
+
+# Runs the parser's corpus fuzz (tests/fuzz.rs) with a fresh seed each run and a
+# high iteration count. The oracle is a property - Bundle::open never panics on
+# any input - so a failure means a genuine robustness bug, reproducible from the
+# reported seed.
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '19 8 * * 1'
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: 'FUZZ_SEED to run (default: today, YYYYMMDD)'
+        type: string
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'schedule' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.event_name != 'schedule' }}
+
+jobs:
+  fuzz:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # v1
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Choose seed
+        id: seed
+        # Untrusted input via env, never interpolated into the script source.
+        env:
+          SEED_INPUT: ${{ inputs.seed }}
+        run: |
+          seed="$SEED_INPUT"
+          [ -n "$seed" ] || seed=$(date -u +%Y%m%d)
+          echo "seed=$seed" >> "$GITHUB_OUTPUT"
+          echo "::notice::fuzzing with FUZZ_SEED=$seed"
+      - id: fuzz
+        env:
+          FUZZ_SEED: ${{ steps.seed.outputs.seed }}
+          FUZZ_ITERS: '200000'
+        run: cargo test --test fuzz -- --nocapture
+      - name: File the failing seed
+        if: failure() && steps.fuzz.outcome == 'failure' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SEED: ${{ steps.seed.outputs.seed }}
+        run: |
+          title="fuzz: Bundle::open panicked on seed $SEED"
+          body=$(printf 'The corpus fuzz failed on seed `%s`.\n\nReproduce:\n\n```\nFUZZ_SEED=%s cargo test --test fuzz -- --nocapture\n```\n\nRun: %s\n' \
+            "$SEED" "$SEED" \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")
+          existing=$(gh issue list --state open --label ci-failure --json number,title \
+            --jq ".[] | select(.title == \"$title\") | .number" | head -1)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Seen again in run ${{ github.run_id }}."
+          else
+            gh issue create --title "$title" --label ci-failure --label bug --body "$body"
+          fi
