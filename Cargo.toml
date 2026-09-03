@@ -9,8 +9,6 @@ description = "Session-free reader for a .gputrace bundle's texture manifest (xd
 readme = "README.md"
 keywords = ["gputrace", "gpu", "texture", "metal", "parser"]
 categories = ["parser-implementations", "rendering::data-formats"]
-# Not published yet: flip by removing this line when cutting the first release.
-publish = false
 
 [dependencies]
 flate2 = "1"

@@ -2,8 +2,9 @@
 
 Notable changes per release. Dates are the publish date.
 
-## Unreleased
+## 0.1.0 - 2026-09-03
 
 ### Added
 
-- Initial 0.1.0 development. The crate (`gputrace-bundle`) is not yet published.
+- Initial release: a session-free reader for a `.gputrace` bundle's texture
+  manifest (xdic index + zlib store).
