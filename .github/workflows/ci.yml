@@ -63,9 +63,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # v1
         with:
-          command: check licenses bans sources
+          toolchain: stable
+      - uses: taiki-e/install-action@37f7c5781271959fb65b6b35224e28652ff2b63d # v2.87.0
+        with:
+          tool: cargo-deny@0.20.2
+      # The cargo-deny-action is a Linux-only container action; run the CLI so
+      # this works on the macOS runner.
+      - run: cargo deny check licenses bans sources
 
   msrv:
     runs-on: macos-latest
@@ -110,9 +116,10 @@ jobs:
       - name: actionlint
         env:
           SHELLCHECK_OPTS: -e SC2016
+        # go is not on the macOS runner; install actionlint via Homebrew.
         run: |
-          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
-          "$(go env GOPATH)/bin/actionlint"
+          brew install actionlint
+          actionlint
       - uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
         with:
           inputs: .github

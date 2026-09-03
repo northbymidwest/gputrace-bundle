@@ -62,7 +62,10 @@ pub(crate) fn derive_tag(word0s: &[u64]) -> Option<u64> {
     }
     // Ties are broken by the tag value (the larger wins), so the result is
     // deterministic rather than dependent on HashMap iteration order.
-    votes.into_iter().max_by_key(|&(w, n)| (n, w)).map(|(w, _)| w)
+    votes
+        .into_iter()
+        .max_by_key(|&(w, n)| (n, w))
+        .map(|(w, _)| w)
 }
 
 #[cfg(test)]
