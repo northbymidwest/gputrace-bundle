@@ -71,10 +71,11 @@ jobs:
         if: always() && steps.mutate.outputs.regression == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
         env:
           GH_TOKEN: ${{ github.token }}
+          MISSED: ${{ steps.mutate.outputs.missed }}
         run: |
           title="mutants: surviving mutants above the baseline"
           body=$(printf 'cargo-mutants found %s surviving mutants, above the baseline of %s (run %s).\n' \
-            "${{ steps.mutate.outputs.missed }}" "$BASELINE" \
+            "$MISSED" "$BASELINE" \
             "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")
           existing=$(gh issue list --state open --label ci-failure --json number,title \
             --jq ".[] | select(.title == \"$title\") | .number" | head -1)

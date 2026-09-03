@@ -66,9 +66,9 @@ fn valid_bundle(rng: &mut Rng) -> (Vec<u8>, Vec<u8>) {
         set(7, 1);
         let c = zlib(&d);
         let off = store0.len() as u64;
-        let clen = c.len() as u32;
+        let comp_len = c.len() as u32;
         store0.extend_from_slice(&c);
-        placed.push((off, clen));
+        placed.push((off, comp_len));
     }
 
     let mut index = Vec::new();
@@ -80,9 +80,9 @@ fn valid_bundle(rng: &mut Rng) -> (Vec<u8>, Vec<u8>) {
     // Bucket table: 0xFF padding (no alias mappings, every id self-canonical).
     index.extend(std::iter::repeat_n(0xFFu8, bucket_count as usize * 12));
     // Record array: usize_len, csize, store0_offset, flags (24 bytes each).
-    for &(off, clen) in &placed {
+    for &(off, comp_len) in &placed {
         index.extend_from_slice(&248u32.to_le_bytes());
-        index.extend_from_slice(&clen.to_le_bytes());
+        index.extend_from_slice(&comp_len.to_le_bytes());
         index.extend_from_slice(&off.to_le_bytes());
         index.extend_from_slice(&0u64.to_le_bytes());
     }

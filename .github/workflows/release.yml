@@ -107,4 +107,6 @@ jobs:
             --notes-file /tmp/notes.md --prerelease --verify-tag
       - name: Dry run summary
         if: ${{ inputs.dry_run }}
-        run: echo "Dry run only. A real run would publish gputrace-bundle and tag v${{ inputs.version }}." >> "$GITHUB_STEP_SUMMARY"
+        env:
+          VERSION: ${{ inputs.version }}
+        run: echo "Dry run only. A real run would publish gputrace-bundle and tag v$VERSION." >> "$GITHUB_STEP_SUMMARY"

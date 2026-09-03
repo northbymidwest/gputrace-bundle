@@ -1,7 +1,0 @@
-src/lib.rs:48:9: replace Bundle::open -> Result<Bundle, Error> with Ok(Default::default())
-src/lib.rs:93:17: replace && with || in Bundle::open
-src/lib.rs:123:9: replace Bundle::textures -> &[TextureDescriptor] with Vec::leak(vec![Default::default()])
-src/descriptor.rs:41:5: replace parse_descriptor -> TextureDescriptor with Default::default()
-src/index.rs:18:9: replace Header::parse -> Result<Header, Error> with Ok(Default::default())
-src/index.rs:48:9: replace Record::parse_at -> Option<Record> with Some(Default::default())
-src/index.rs:73:9: replace Buckets::build -> Option<Buckets> with Some(Default::default())
