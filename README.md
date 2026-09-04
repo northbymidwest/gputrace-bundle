@@ -1,5 +1,10 @@
 # gputrace-bundle
 
+[![github](https://img.shields.io/badge/github-northbymidwest%2Fgputrace--bundle-blue?logo=github)](https://github.com/northbymidwest/gputrace-bundle)
+[![crates.io](https://img.shields.io/crates/v/gputrace-bundle.svg)](https://crates.io/crates/gputrace-bundle)
+[![docs.rs](https://docs.rs/gputrace-bundle/badge.svg)](https://docs.rs/gputrace-bundle)
+[![CI](https://github.com/northbymidwest/gputrace-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/northbymidwest/gputrace-bundle/actions/workflows/ci.yml)
+
 A session-free reader for a `.gputrace` capture bundle's texture manifest.
 
 `.gputrace` is the bundle Apple's GPU tools write when you capture a Metal
