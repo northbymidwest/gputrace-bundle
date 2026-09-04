@@ -5,6 +5,7 @@ name: CI
 # only produced by Apple's tooling, but parsing it is platform-independent.
 on:
   push:
+    branches: [main]
   pull_request:
   schedule:
     - cron: '37 6 * * 1'
