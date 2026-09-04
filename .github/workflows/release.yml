@@ -91,20 +91,32 @@ jobs:
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
         run: cargo publish
+      # Only now: everything above can fail without leaving a mark; from here
+      # the tag is permanent. The `protect version tags` ruleset restricts v*
+      # creation to one bypass actor, a deploy key whose private half is the
+      # `release` environment's RELEASE_TAG_KEY. GITHUB_TOKEN cannot be a bypass
+      # actor, so the push goes over SSH with that key and nothing else on offer
+      # (-F /dev/null, no agent). GitHub's host keys come from its API.
       - name: Tag and release
         if: ${{ !inputs.dry_run }}
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
+          RELEASE_TAG_KEY: ${{ secrets.RELEASE_TAG_KEY }}
         run: |
           set -eu
           sha=$(git rev-parse HEAD)
-          awk -v v="$VERSION" 'index($0, "## " v " ") == 1 {f=1; next} /^## / {f=0} f' \
-            CHANGELOG.md > /tmp/notes.md
-          git tag "v$VERSION" "$sha"
-          git push origin "v$VERSION"
+          dir=$(mktemp -d)
+          trap 'rm -rf "$dir"' EXIT
+          printf '%s\n' "$RELEASE_TAG_KEY" > "$dir/key"
+          chmod 600 "$dir/key"
+          gh api meta --jq '.ssh_keys[] | "github.com \(.)"' > "$dir/known_hosts"
+          GIT_SSH_COMMAND="ssh -F /dev/null -i $dir/key -o IdentitiesOnly=yes -o IdentityAgent=none -o UserKnownHostsFile=$dir/known_hosts -o StrictHostKeyChecking=yes" \
+            git push "git@github.com:${{ github.repository }}.git" "$sha:refs/tags/v$VERSION"
+          awk -v v="$VERSION" 'index($0, "## " v " ") == 1 {f=1;next} /^## /{f=0} f' CHANGELOG.md > /tmp/notes.md
           gh release create "v$VERSION" --title "v$VERSION" \
             --notes-file /tmp/notes.md --prerelease --verify-tag
+          echo "::notice::published $VERSION and tagged v$VERSION at $sha"
       - name: Dry run summary
         if: ${{ inputs.dry_run }}
         env:

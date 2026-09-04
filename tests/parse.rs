@@ -81,6 +81,9 @@ fn opens_parses_resolves_alias_and_sorts() {
     // Three texture descriptors (record 0, record 1, alias->0), sorted by
     // store0_offset ascending: d1(off lower) first, then the two copies of d0.
     assert_eq!(bundle.texture_count(), 3);
+    // record_count is the header's total (all 4 records), distinct from the 3
+    // textures: it counts the bulk record too and is the streamRef upper bound.
+    assert_eq!(bundle.record_count(), 4);
     assert_eq!(t[0].width, 128); // lowest store0 offset
     assert_eq!(t[1].width, 64);
     assert_eq!(t[2].width, 64); // the alias resolved to d0's bytes

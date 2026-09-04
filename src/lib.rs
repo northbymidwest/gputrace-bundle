@@ -40,6 +40,7 @@ pub enum Error {
 #[derive(Debug)]
 pub struct Bundle {
     name: String,
+    record_count: usize,
     textures: Vec<TextureDescriptor>,
 }
 
@@ -114,7 +115,11 @@ impl Bundle {
             .and_then(|s| s.to_str())
             .unwrap_or("trace")
             .to_string();
-        Ok(Bundle { name, textures })
+        Ok(Bundle {
+            name,
+            record_count: header.record_count as usize,
+            textures,
+        })
     }
 
     /// Texture descriptors, sorted by `store0_offset` ascending (the bridge
@@ -125,6 +130,19 @@ impl Bundle {
 
     pub fn texture_count(&self) -> usize {
         self.textures.len()
+    }
+
+    /// The index header's record count: how many resource records the
+    /// replayer's load path may create, across every resource type (textures,
+    /// buffers, heaps, pipelines, acceleration structures). The replayer
+    /// assigns streamRefs in creation order, at most one per record, so this
+    /// is an upper bound on the highest streamRef a fetch sweep needs to try.
+    ///
+    /// Prefer this over [`Bundle::texture_count`] for bounding a sweep:
+    /// streamRefs are shared across all resource types, not just textures, so
+    /// the texture count is far below the highest ref that can answer.
+    pub fn record_count(&self) -> usize {
+        self.record_count
     }
 
     pub fn name(&self) -> &str {
