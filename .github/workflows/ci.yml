@@ -18,6 +18,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
+# Plain rustup sets neither; dtolnay/rust-toolchain used to.
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_TERM_COLOR: always
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -26,9 +31,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: dtolnay/rust-toolchain@7e38f4b43b4db5c8dd498af069a4f6196df1d067 # v1
-        with:
-          toolchain: stable
+      - run: rustup toolchain install stable --profile minimal --no-self-update && rustup default stable
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       - run: cargo test
 
@@ -39,10 +42,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: dtolnay/rust-toolchain@7e38f4b43b4db5c8dd498af069a4f6196df1d067 # v1
-        with:
-          toolchain: stable
-          components: rustfmt, clippy
+      - run: rustup toolchain install stable --profile minimal --no-self-update -c rustfmt,clippy && rustup default stable
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
       - run: cargo fmt --all -- --check
       - run: ./scripts/check-ascii.sh
@@ -81,9 +81,10 @@ jobs:
           v=$(sed -n 's/^rust-version = "\([0-9.]*\)"$/\1/p' Cargo.toml | head -1)
           test -n "$v" || { echo '::error::no rust-version in Cargo.toml'; exit 1; }
           echo "version=$v" >> "$GITHUB_OUTPUT"
-      - uses: dtolnay/rust-toolchain@7e38f4b43b4db5c8dd498af069a4f6196df1d067 # v1
-        with:
-          toolchain: ${{ steps.msrv.outputs.version }}
+      - run: rustup toolchain install "$TOOLCHAIN" --profile minimal --no-self-update && rustup default "$TOOLCHAIN"
+        shell: bash
+        env:
+          TOOLCHAIN: ${{ steps.msrv.outputs.version }}
       - run: cargo build
 
   semver:
